@@ -1,0 +1,104 @@
+@import "./util.less";
+
+body input,
+html {
+  -webkit-overflow-scrolling: touch; // font: 12px/1.5  Arial,'Hiragino Sans GB','冬青黑','Microsoft YaHei', YaHei, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-family: "PingFang SC", "Helvetica Neue", Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+
+html,
+body {
+  background-color: #F1F2F9 !important;
+  // background-color: red;
+}
+
+button,input{
+  outline: none;
+}
+button{
+  border: 0;
+}
+
+article,
+aside,
+blockquote,
+body,
+button,
+code,
+dd,
+details,
+div,
+dl,
+dt,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+hr,
+input,
+legend,
+li,
+menu,
+nav,
+ol,
+p,
+pre,
+section,
+td,
+textarea,
+th,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+:global {
+
+  .am-picker-popup-header-left, .am-picker-popup-header-right{
+    color: #D3B992 !important;
+  }
+
+  .am-calendar .single-month .row .cell .date-wrapper .left,
+  .am-calendar .single-month .row .cell .date-wrapper .right {
+    width: 40px !important;
+  }
+
+  .am-calendar .single-month .row .cell .date-wrapper {
+    width: auto !important;
+  }
+
+  .am-calendar .single-month .row .cell .date-wrapper .date-selected {
+    background: #D3B992 !important;
+  }
+
+  .am-calendar .single-month .row .cell .info.date-selected {
+    color: #108ee9 !important;
+  }
+
+  .am-calendar .confirm-panel .button {
+    background: #D3B992 !important;
+    color: #fff !important;
+  }
+
+  .am-calendar .confirm-panel .button-disable {
+    opacity: 0.5;
+  }
+
+  .x-Modal {
+    z-index: 1000 !important;
+  }
+
+  .x-ModalForIos-button-main{
+    color: #D3B992 !important;
+  }
+}
