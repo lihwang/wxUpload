@@ -1,7 +1,8 @@
 import axios from 'axios';
 import config from 'commons/config';
 import qs from "qs";
-import Toast from 'frag/react/Toast';
+import {Toast} from 'antd-mobile';
+import util from "commons/util";
 
 // 请求超时
 const TIMEOUT = 10000;
@@ -12,13 +13,15 @@ let fetchLock = true;
 
 // 创建axios实例
 const _fetch = axios.create({
-    baseURL: config.public.rpcPath.h5, 
+    //TODO:修改
+    // baseURL: config.public.rpcPath.h5, 
+    baseURL: `http://wxtest.linkmsg.net`, 
 
     // 超时
     timeout: TIMEOUT,
 
     // 是否跨域携带cookie
-    withCredentials: true,
+    // withCredentials: true,
 
     headers: {
       
@@ -35,16 +38,25 @@ _fetch.interceptors.request.use(function (config) {
         }
     }
 
-    config.data = Object.assign({ _stamp: (new Date()).getTime() }, config.data);
+
+    // config.data = Object.assign({ timestamp: Math.floor((new Date()).getTime()/1000) }, config.data);
+    config.data = Object.assign({ timestamp: Date.parse(new Date())/1000 }, config.data);
+
+   
 
     // get传参
     if (config.method == "get" && config.data) {
-        config.url += `?${qs.stringify(config.data)}`
+        // config.url += `?${qs.stringify(config.data)}`
+        config.url += `?${util.formatQuery(util.sort_ASCII(config.data))}`
+
     }
 
-    if (config.method == "post" && !config.headers["Content-Type"]) {
-        config.url += `?${qs.stringify(config.data)}`
-    }
+    config.data =util.sort_ASCII(config.data);
+
+    // if (config.method == "post" && !config.headers["Content-Type"]) {
+    //     // config.url += `?${qs.stringify(config.data)}`
+    //     config.url += `?${util.formatQuery(util.sort_ASCII(config.data))}`
+    // }
 
     // 请求锁, 
     let lock = config.fetchLock != undefined && config.fetchLock != null ? config.fetchLock : fetchLock;
@@ -89,36 +101,29 @@ _fetch.interceptors.response.use(function (res) {
         console.log(data.message);
         let showToast = true;
 
-        // 如果创建订单接口，则不提示错误信息
-        if (res.config.url.indexOf("/create_order") >= 0) {
-            // 不提示错误信息
-            showToast = false;
-            if (code != 40061) {
-                // 跳转订单失败页
-            }
-        }
+
 
         // 如果是请求用户信息
-        if (res.config.url.indexOf("user/query") >= 0) {
-            // 不提示错误信息
-            showToast = false;
-        }
+        // if (res.config.url.indexOf("/api/user") >= 0&&code == 10001) {
+        //     // 不提示错误信息
+        //     showToast = false;
+        // }
 
-        // 登录失效
-        if (code == 10001) {
-            showToast = false;
-            Toast.info("登录已失效，即将返回首页重新登录", 2000);
-            setTimeout(() => {
+        // // 登录失效
+        // if (code == 10001) {
+        //     showToast = false;
+        //     Toast.info("登录已失效，即将返回首页重新登录", 2000);
+        //     setTimeout(() => {
                 
-            }, 2000)
-            return;
-        }
+        //     }, 2000)
+        //     return;
+        // }
 
         // 结束上一个toast
         Toast.hide();
 
         // 打印错误信息
-        !!showToast && Toast.info(data.message, 2000);
+        !!showToast && Toast.info(data.message, 2);
         return Promise.reject(data);
     }
 }, function (error) {

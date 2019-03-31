@@ -14,10 +14,10 @@ let publicRpcPath = null;
 let pageListArray = null;
 
 let devServerProxy = {
-  '/proxy/': {
-    target: 'https://www.***.com/',
+  '/api': {
+    target: '//wxtest.linkmsg.net',
     pathRewrite: {
-      '^/proxy/': '/'
+      '^/api': '/'
     },
     logLevel: 'debug', // 修改 webpack-dev-server 的日志等级
     secure: false, // 忽略检查代理目标的 SSL 证书

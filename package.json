@@ -9,6 +9,10 @@
     "build:test": "cross-env NODE_ENV=production dev=false GULP_ENV=test webpack --progress --hide-modules --color",
     "build:prod": "cross-env NODE_ENV=production dev=false GULP_ENV=prod webpack --progress --hide-modules --color"
   },
+  "deploy": {
+    "cdn": "",
+    "cdnDir": "wx"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lihwang/wxUpload.git"
@@ -23,19 +27,20 @@
   "assetExtractCss": true,
   "dependencies": {
     "antd-mobile": "^2.1.8",
-    "qs": "^6.5.2",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.20.0",
     "babel-runtime": "6.x",
+    "browser-md5-file": "^1.1.1",
     "classnames": "^2.2.5",
+    "copy-to-clipboard": "^3.0.8",
     "core-js": "^2.4.1",
     "exif-js": "^2.3.0",
     "lrz": "^4.9.40",
     "normalize.css": "~4.2.0",
-    "copy-to-clipboard": "^3.0.8",
+    "qs": "^6.5.2",
     "react": "^15.4.2",
-    "react-loadable": "^5.5.0",
     "react-dom": "^15.4.2",
+    "react-loadable": "^5.5.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",

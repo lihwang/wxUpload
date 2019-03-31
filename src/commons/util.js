@@ -614,5 +614,40 @@ util.setCookie = function (name, value, expires, path, domain, secure) {
   if (secure != null) updatedCookie += ";secure=" + secure;
   document.cookie = updatedCookie;
 }
+/**
+ * ASCII排序
+ */
+util.sort_ASCII=function(obj){
+  var arr = new Array();
+  var num = 0;
+  for (var i in obj) {
+    arr[num] = i;
+    num++;
+  }
+  var sortArr = arr.sort();
+  var sortObj = {};
+  for (var i in sortArr) {
+    sortObj[sortArr[i]] = obj[sortArr[i]];
+  }
+  return sortObj;
+}
+
+
+util.formatQuery=function(obj, separator = "&", equal = "=") {
+  const parts= [];
+  for (const key in obj) {
+      const value = obj[key];
+      if (Array.isArray(value)) {
+          for (const item of value) {
+              parts.push(`${key}${equal}${encodeURIComponent(item)}`);
+          }
+      } else {
+          parts.push(`${key}${equal}${encodeURIComponent(value)}`);
+      }
+  }
+  return parts.join(separator);
+}
+
+
 
 export default util;

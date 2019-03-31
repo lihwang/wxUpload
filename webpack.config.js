@@ -12,7 +12,7 @@ let componentPath = path.join(srcPath, 'components'); // 业务组件路径
 let antdModify = require(path.join(srcPath, 'styles', 'antdModify'));
 
 // 环境域名
-let __URL_HOST__ = process.env.GULP_ENV === "prod" ? "***.com.cn" : "***.com";
+let __URL_HOST__ = process.env.GULP_ENV === "prod" ? "***.com.cn" : "193.112.16.25:8081";
 
 // mini-css-extract-plugin 配置
 let cssExtractLoader = pkg.assetExtractCss ? MiniCssExtractPlugin.loader : {
@@ -34,7 +34,7 @@ let config = webpackCfg.getConfig({
   },
   // 后端接口路径
   rpcPath: {
-    h5: `//${process.env.GULP_ENV == "prod" ? "***" : "***"}`
+    h5: `//${process.env.GULP_ENV == "prod" ? "***" : "wxapp.linkmsg.net"}`
   },
   // 测试和生产环境配置
   dev: {
@@ -44,11 +44,9 @@ let config = webpackCfg.getConfig({
   },
   prod: {
     // 替换资源路径
-    assetPath: `//${__URL_HOST__}/${pkg.deploy.cdnDir}/${pkg.version}/assets/`
+    // assetPath: `//${__URL_HOST__}/${pkg.deploy.cdnDir}/${pkg.version}/assets/`
+    assetPath: `//${__URL_HOST__}/${pkg.version}/assets/`
 
-  },
-  externals: {
-    Swiper: "Swiper"
   },
   // 模块索引规则
   resolve: {
@@ -93,7 +91,11 @@ let config = webpackCfg.getConfig({
             }
           },
         },
-        'less-loader'
+        {
+        loader: 'less-loader',
+            options: {javascriptEnabled: true}
+          },
+        
       ]
     },
     {
@@ -126,7 +128,8 @@ let config = webpackCfg.getConfig({
         {
           loader: 'less-loader',
           options: {
-            modifyVars: antdModify.lessQuery.modifyVars
+            modifyVars: antdModify.lessQuery.modifyVars,
+            javascriptEnabled: true
           }
         }
       ]

@@ -1,13 +1,14 @@
 /**
- * @description 全部权益
+ * @description 首页
  */
 import React from 'react';
 import EntryBase from '../Common/EntryBase';
 import style from './styles/App.less';
 import { Button, WhiteSpace, WingBlank} from 'antd-mobile';
-let locationPathArr = location.pathname.split("/");
-locationPathArr.pop();
+import {Toast} from 'antd-mobile';
 
+//api
+import {oauth2,queryUser } from "api/api";
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
@@ -17,7 +18,27 @@ export default class App extends EntryBase {
     }
 
     componentDidMount() {
-      
+        //请求授权
+        let dataList={
+            caller:'apiUser@wxapp.linkmsg.net',
+            orderNo:'KxK7f3yaSfOXVwvuYJDozvQ7Mt1JnqRX',
+            frontUrl:'http://193.112.16.25:8081',
+            sign:'abc'
+        }
+        oauth2(dataList).then(res=>{
+            console.log(res)
+        })
+
+        let queryData={
+            caller:'apiUser@wxapp.linkmsg.net',
+            orderNo:'KxK7f3yaSfOXVwvuYJDozvQ7Mt1JnqRX',
+            openId:'wxaa716c50bce7516b',
+            sign:'abc'
+        }
+        queryUser(queryData).then(res=>{
+            console.log(res)
+        })
+
     }
     componentDidUpdate() {
         

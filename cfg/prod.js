@@ -3,7 +3,7 @@ let webpack = require('webpack');
 let settings = require('./settings.js');
 
 // 环境
-let env = process.env.GULP_ENV == "prod" ? "***.com.cn" : "***.com";
+let env = process.env.GULP_ENV == "prod" ? "***.com.cn" : "wxapp.linkmsg.net";
 
 // 项目页面路径
 let publicPagePath = './';
