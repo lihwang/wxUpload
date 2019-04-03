@@ -40,20 +40,8 @@ export function register(data) {
  */
 export function oauth2(data) {
   return _fetch({
-    url: "/api/oauth2/url",
+    url: "/web/oauth2/openId",
     method: "GET",
-    data: data,
-    headers: {}
-  });
-}
-
-/**
- * 用户oauth2授权验证（获取授权页面）
- */
-export function grant(data) {
-  return _fetch({
-    url: "/api/oauth2/grant",
-    method: "POST",
     data: data,
     headers: {}
   });

@@ -5,7 +5,7 @@ import React from 'react';
 import style from './styles/App.less';
 import EntryBase from '../Common/EntryBase';
 import { Button, WhiteSpace,InputItem,List,Toast} from 'antd-mobile';
-
+import util from "commons/util";
 
 //api
 import { sms,queryUser,register } from "api/api";
@@ -23,7 +23,7 @@ export default class App extends EntryBase {
     }
 
     componentDidMount() {
-     
+        // super.componentDidMount();s
     }
 
     componentDidUpdate() {
@@ -35,22 +35,11 @@ export default class App extends EntryBase {
             Toast.fail('手机号码不正确');
             return false;
         }
-        // //用户验证
-        // let datauser={
-        //     caller:'apiUser@wxapp.linkmsg.net',
-        //     orderNo:'123456',
-        //     openId:'123456',
-        // }
-        // queryUser
-
 
         //请求短信
         let dataList={
             mobile:this.state.phone.replace(/\s+/g,""),
-            caller:'apiUser@wxapp.linkmsg.net',
-            orderNo:'KxK7f3yaSfOXVwvuYJDozvQ7Mt1JnqRX',
             mode:'1',
-            sign:'abc'
         }
         sms(dataList).then(res=>{
             Toast.success('短信发送成功，请查收短信！');
@@ -114,9 +103,7 @@ export default class App extends EntryBase {
             }
             let registerData={
                 mobile:this.state.phone.replace(/\s+/g,""),
-                caller:'apiUser@wxapp.linkmsg.net',
-                orderNo:'KxK7f3yaSfOXVwvuYJDozvQ7Mt1JnqRX',
-                openId:'wxaa716c50bce7516b',
+                openId:util.getCookie('openId'),
                 smsCode:this.state.msgCode,
                 password:'',
                 sign:'abc'

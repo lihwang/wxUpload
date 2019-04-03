@@ -7,6 +7,7 @@ import style from './styles/App.less';
 import { Button, WhiteSpace, WingBlank} from 'antd-mobile';
 import {Toast} from 'antd-mobile';
 
+import util from "commons/util";
 //api
 import {oauth2,queryUser } from "api/api";
 export default class App extends EntryBase {
@@ -18,25 +19,13 @@ export default class App extends EntryBase {
     }
 
     componentDidMount() {
-        //请求授权
-        let dataList={
-            caller:'apiUser@wxapp.linkmsg.net',
-            orderNo:'KxK7f3yaSfOXVwvuYJDozvQ7Mt1JnqRX',
-            frontUrl:'http://193.112.16.25:8081',
-            sign:'abc'
-        }
-        oauth2(dataList).then(res=>{
-            console.log(res)
-        })
-
+        super.componentDidMount();
+        console.log(util.getCookie('openId'))
         let queryData={
-            caller:'apiUser@wxapp.linkmsg.net',
-            orderNo:'KxK7f3yaSfOXVwvuYJDozvQ7Mt1JnqRX',
-            openId:'wxaa716c50bce7516b',
-            sign:'abc'
+            openId:util.getCookie('openId'),
         }
         queryUser(queryData).then(res=>{
-            console.log(res)
+           
         })
 
     }

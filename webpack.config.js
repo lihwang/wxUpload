@@ -12,7 +12,7 @@ let componentPath = path.join(srcPath, 'components'); // 业务组件路径
 let antdModify = require(path.join(srcPath, 'styles', 'antdModify'));
 
 // 环境域名
-let __URL_HOST__ = process.env.GULP_ENV === "prod" ? "***.com.cn" : "193.112.16.25:8081";
+let __URL_HOST__ = process.env.GULP_ENV === "prod" ? "web.linkmsg.net:8081" : "web.linkmsg.net:8081";
 
 // mini-css-extract-plugin 配置
 let cssExtractLoader = pkg.assetExtractCss ? MiniCssExtractPlugin.loader : {
@@ -34,12 +34,12 @@ let config = webpackCfg.getConfig({
   },
   // 后端接口路径
   rpcPath: {
-    h5: `//${process.env.GULP_ENV == "prod" ? "***" : "wxapp.linkmsg.net"}`
+    h5: `//${process.env.GULP_ENV == "prod" ? "weixin.linkmsg.net" : "weixin.linkmsg.net"}`
   },
   // 测试和生产环境配置
   dev: {
     devServer: {
-      port: 8001
+      port: 8081
     }
   },
   prod: {

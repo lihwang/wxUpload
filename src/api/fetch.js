@@ -15,7 +15,7 @@ let fetchLock = true;
 const _fetch = axios.create({
     //TODO:修改
     // baseURL: config.public.rpcPath.h5, 
-    baseURL: `http://wxtest.linkmsg.net`, 
+    baseURL: `http://weixin.linkmsg.net`, 
 
     // 超时
     timeout: TIMEOUT,
@@ -38,25 +38,15 @@ _fetch.interceptors.request.use(function (config) {
         }
     }
 
-
-    // config.data = Object.assign({ timestamp: Math.floor((new Date()).getTime()/1000) }, config.data);
-    config.data = Object.assign({ timestamp: Date.parse(new Date())/1000 }, config.data);
-
-   
+    config.data = Object.assign({ timestamp: Date.parse(new Date())/1000,caller:'apiUser@wxapp.linkmsg.net',sign:'abc',orderNo:util.randomString()}, config.data);
 
     // get传参
     if (config.method == "get" && config.data) {
-        // config.url += `?${qs.stringify(config.data)}`
         config.url += `?${util.formatQuery(util.sort_ASCII(config.data))}`
-
     }
 
     config.data =util.sort_ASCII(config.data);
 
-    // if (config.method == "post" && !config.headers["Content-Type"]) {
-    //     // config.url += `?${qs.stringify(config.data)}`
-    //     config.url += `?${util.formatQuery(util.sort_ASCII(config.data))}`
-    // }
 
     // 请求锁, 
     let lock = config.fetchLock != undefined && config.fetchLock != null ? config.fetchLock : fetchLock;
@@ -103,11 +93,12 @@ _fetch.interceptors.response.use(function (res) {
 
 
 
-        // 如果是请求用户信息
-        // if (res.config.url.indexOf("/api/user") >= 0&&code == 10001) {
-        //     // 不提示错误信息
-        //     showToast = false;
-        // }
+        //如果是请求用户信息
+        if (res.config.url.indexOf("/api/user") >= 0&&code == 10020) {
+            // 不提示错误信息
+            showToast = false;
+            location.href='login.html';
+        }
 
         // // 登录失效
         // if (code == 10001) {

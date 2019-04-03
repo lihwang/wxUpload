@@ -614,6 +614,24 @@ util.setCookie = function (name, value, expires, path, domain, secure) {
   if (secure != null) updatedCookie += ";secure=" + secure;
   document.cookie = updatedCookie;
 }
+
+//获取cookie
+util.getCookie=function(name){
+  var cookies = document.cookie.split(";");
+  console.log(cookies);
+  for (var i = 0; i < cookies.length; i++) {
+      var cookieCrumbs = cookies[i].split("=");
+      var cookieName = cookieCrumbs[0].replace(/(^\s*)|(\s*$)/g, "");
+      var cookieValue = cookieCrumbs[1];
+
+      if (cookieName == name) {
+          if (cookieValue) {
+              return decodeURIComponent(cookieValue)
+          }
+      }
+  }
+  return null;
+}
 /**
  * ASCII排序
  */
@@ -632,6 +650,16 @@ util.sort_ASCII=function(obj){
   return sortObj;
 }
 
+util.randomString=function(len) {
+  　　len = len || 32;
+  　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+  　　var maxPos = $chars.length;
+  　　var pwd = '';
+  　　for (let i = 0; i < len; i++) {
+  　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+  　　}
+  　　return pwd;
+  }
 
 util.formatQuery=function(obj, separator = "&", equal = "=") {
   const parts= [];
