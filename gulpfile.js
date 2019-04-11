@@ -127,7 +127,7 @@ gulp.task('upload', function () {
       host: '148.70.216.55',
       port:22,
       user: 'app',
-      pass: 'tingyu_0321X',
+      pass: '',
       remotePath:'/home/app/wx/'
     }))
   })
