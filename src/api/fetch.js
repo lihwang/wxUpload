@@ -88,33 +88,22 @@ _fetch.interceptors.response.use(function (res) {
         return data;
     } else {
         // 打印错误信息
-        console.log(data.message);
         let showToast = true;
 
 
-
+        showToast = false;
         //如果是请求用户信息
         if (res.config.url.indexOf("/api/user") >= 0&&code == 10020) {
             // 不提示错误信息
-            showToast = false;
             location.href='login.html';
         }
-
-        // // 登录失效
-        // if (code == 10001) {
-        //     showToast = false;
-        //     Toast.info("登录已失效，即将返回首页重新登录", 2000);
-        //     setTimeout(() => {
-                
-        //     }, 2000)
-        //     return;
-        // }
 
         // 结束上一个toast
         Toast.hide();
 
         // 打印错误信息
         !!showToast && Toast.info(data.message, 2);
+        console.log('error',data)
         return Promise.reject(data);
     }
 }, function (error) {

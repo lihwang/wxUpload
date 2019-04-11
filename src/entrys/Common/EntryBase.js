@@ -20,19 +20,21 @@ class EntryBase extends React.Component {
 	}
 
 	componentDidMount(){
-		// let params=util.parseUrl(location.href).params;
-		// let dataList={
-        //     caller:'apiUser@wxapp.linkmsg.net',
-        //     orderNo:util.randomString(),
-        //     sign:'abc'
-		// }
+		let params=util.parseUrl(location.href).params;
+		let dataList={
+            caller:'apiUser@wxapp.linkmsg.net',
+            orderNo:util.randomString(),
+            sign:'abc'
+		}
 
-		// if(!params.openid){
-		// 	window.location.href='http://weixin.linkmsg.net/web/oauth2/openId'+`?${util.formatQuery(util.sort_ASCII(dataList))}`
-		// }else{
-		// 	util.setCookie('openId',params.openid);
-		// }
-			util.setCookie('openId','o3dEH0kw4l379YMS5VQXVUXCLM4Y');
+		if(!params.openid){
+			window.location.href='http://weixin.linkmsg.net/web/oauth2/openId'+`?${util.formatQuery(util.sort_ASCII(dataList))}`
+		}else{
+			util.setCookie('openId',params.openid);
+			util.setCookie('token',params.token);
+			
+		}
+			// util.setCookie('openId','o3dEH0kw4l379YMS5VQXVUXCLM4Y');
 
 		// let openid=util.getCookie('openid');
 		// if(!openid){

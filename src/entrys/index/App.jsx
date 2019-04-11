@@ -20,12 +20,13 @@ export default class App extends EntryBase {
 
     componentDidMount() {
         super.componentDidMount();
-        console.log(util.getCookie('openId'))
         let queryData={
             openId:util.getCookie('openId'),
         }
         queryUser(queryData).then(res=>{
-           
+           if(!res.userId){
+            location.href='login.html';
+           }
         })
 
     }

@@ -109,7 +109,11 @@ export default class App extends EntryBase {
                 sign:'abc'
             }
             register(registerData).then(res=>{
-                console.log(res)
+           
+            },err=>{
+                if(err.code=='10001'){
+                    Toast.fail('验证码过期了');
+                }
             })
 
         }
