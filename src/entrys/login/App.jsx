@@ -23,7 +23,7 @@ export default class App extends EntryBase {
     }
 
     componentDidMount() {
-        // super.componentDidMount();s
+        // super.componentDidMount();
     }
 
     componentDidUpdate() {
@@ -109,7 +109,7 @@ export default class App extends EntryBase {
                 sign:'abc'
             }
             register(registerData).then(res=>{
-           
+                location.href='index.html';
             },err=>{
                 if(err.code=='10001'){
                     Toast.fail('验证码过期了');

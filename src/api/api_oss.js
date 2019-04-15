@@ -11,3 +11,16 @@ export function sign(data) {
       headers: {}
     });
   }
+
+/**
+ * 对象存储数据保存 
+ * 利用拍拍云上传后就通知服务器
+ */
+export function ossPost(data) {
+  return _fetch({
+    url: "/api/oss",
+    method: "POST",
+    data: data,
+    headers: {}
+  });
+}

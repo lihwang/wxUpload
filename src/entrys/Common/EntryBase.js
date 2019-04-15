@@ -13,6 +13,7 @@ class EntryBase extends React.Component {
 		super(props);
 
 		this.state = {}
+		this.userId='';
 	}
 
 	componentWillMount() {
@@ -20,20 +21,30 @@ class EntryBase extends React.Component {
 	}
 
 	componentDidMount(){
-		let params=util.parseUrl(location.href).params;
 		let dataList={
             caller:'apiUser@wxapp.linkmsg.net',
             orderNo:util.randomString(),
             sign:'abc'
 		}
-
-		if(!params.openid){
-			window.location.href='http://weixin.linkmsg.net/web/oauth2/openId'+`?${util.formatQuery(util.sort_ASCII(dataList))}`
-		}else{
+		let params=util.parseUrl(location.href).params;
+		let openId=util.getCookie('openId');
+		if(!openId){
 			util.setCookie('openId',params.openid);
 			util.setCookie('token',params.token);
-			
 		}
+		if(!util.getCookie('openId')){
+			window.location.href='http://weixin.linkmsg.net/web/oauth2/openId'+`?${util.formatQuery(util.sort_ASCII(dataList))}`
+		}
+		let queryData={
+			openId:util.getCookie('openId'),
+		}
+		queryUser(queryData).then(res=>{
+			if(!res.userId){
+			 location.href='login.html';
+			}else{
+			 this.userId=res.userId;
+			}
+		 })
 			// util.setCookie('openId','o3dEH0kw4l379YMS5VQXVUXCLM4Y');
 
 		// let openid=util.getCookie('openid');

@@ -3,7 +3,7 @@ import { ImagePicker,Modal } from 'antd-mobile';
 import BMF from 'browser-md5-file';
 import util from 'commons/util'
 //api
-import {sign} from "api/api_oss";
+import {sign,ossPost} from "api/api_oss";
 
 const bmf = new BMF();
 
@@ -39,25 +39,23 @@ export default class ImagePickerExample extends React.Component {
             };
        
             let signData={
-              caller:'apiUser@wxapp.linkmsg.net',
-              orderNo:'KxK7f3yaSfOXVwvuYJDozvQ7Mt1JnqRX',
-              type:'1',
+              type:'genSign',
               method:'post',
               'x-date':new Date(),
               contentMd5:md5,
               Policy: window.btoa(JSON.stringify(options)),
-              sign:'abc'
             }
             sign(signData).then(res=>{
                 var xhr = new XMLHttpRequest();
                 xhr.open("PUT", "http://v0.api.upyun.com/msg-upyun/path/to/file",true);
                 xhr.onreadystatechange = function(){
                             if (xhr.readyState==4 && xhr.status==200){
-                                alert(xhr.responseText);
+                                console.log(xhr.responseText);
                             }
                     };
-                xhr.setRequestHeader("Authorization",res.sign);
-                xhr.setRequestHeader("Content-Length",file.size);       
+                xhr.setRequestHeader("Authorization",res.signValue);
+                xhr.setRequestHeader("Content-Length",file.size);      
+                xhr.setRequestHeader("Date",new Date());      
                 xhr.send(file);
             })
           }
