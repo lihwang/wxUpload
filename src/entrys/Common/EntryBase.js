@@ -32,26 +32,24 @@ class EntryBase extends React.Component {
 			util.setCookie('openId',params.openid);
 			util.setCookie('token',params.token);
 		}
-		if(!util.getCookie('openId')){
-			window.location.href='http://weixin.linkmsg.net/web/oauth2/openId'+`?${util.formatQuery(util.sort_ASCII(dataList))}`
-		}
-		let queryData={
-			openId:util.getCookie('openId'),
-		}
-		queryUser(queryData).then(res=>{
-			if(!res.userId){
-			 location.href='login.html';
-			}else{
-			 this.userId=res.userId;
+		if(!util.getCookie('openId')||!util.isWeixin()){
+			window.location.href='http://weixin.linkmsg.net/web/oauth2/openId'+`?${util.formatQuery(util.sort_ASCII(dataList))}`;
+		}else{
+			let queryData={
+				openid:util.getCookie('openId'),
 			}
-		 })
-			// util.setCookie('openId','o3dEH0kw4l379YMS5VQXVUXCLM4Y');
-
-		// let openid=util.getCookie('openid');
-		// if(!openid){
-			
-		// 	util.setCookie(openid,)
-		// }
+			queryUser(queryData).then(res=>{
+				if(!res.userId){
+				  util.setCookie('token',null);
+				 location.href='login.html';
+				}else{
+				 this.userId=res.userId;
+				 util.setCookie('userId',res.userId);
+				 location.href.includes("login.html") && (location.href = "index.html");
+				}
+			})
+		}
+		
 	}
 }
 

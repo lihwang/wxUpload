@@ -2,6 +2,7 @@ import React from 'react';
 import { ImagePicker,Modal } from 'antd-mobile';
 import BMF from 'browser-md5-file';
 import util from 'commons/util'
+
 //api
 import {sign,ossPost} from "api/api_oss";
 
@@ -10,66 +11,72 @@ const bmf = new BMF();
 const data = [];
 
 export default class ImagePickerExample extends React.Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state={
             files: data,
             modal1:false,
-            currentPic:''
+            currentPic:"",
+            ossId:''
         }
         this.onChange=this.onChange.bind(this);
     }
 
-    componentDidMount(){
-      
-    }
-    
     onChange(files, type, index){
-      console.log(files, type, index);
       if(type=='add'){
         let file=files[files.length-1].file;
         bmf.md5(
           file,
           (err, md5) => {
-
-            var options = {
-              'bucket': 'msg-upyun',
-              'save-key': `/${new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${md5}${file.name}`,
-              'expiration': Math.floor(new Date().getTime() / 1000) + 86400
-            };
+            var date = new Date();
+            var saveKey=`/${new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${md5}${file.name}`;
        
             let signData={
-              type:'genSign',
-              method:'post',
-              'x-date':new Date(),
+              type:'policyAndAuthorization',
+              method:'POST',
+              path:saveKey,
               contentMd5:md5,
-              Policy: window.btoa(JSON.stringify(options)),
+              date:date.toUTCString()
             }
             sign(signData).then(res=>{
-                var xhr = new XMLHttpRequest();
-                xhr.open("PUT", "http://v0.api.upyun.com/msg-upyun/path/to/file",true);
-                xhr.onreadystatechange = function(){
-                            if (xhr.readyState==4 && xhr.status==200){
-                                console.log(xhr.responseText);
-                            }
-                    };
-                xhr.setRequestHeader("Authorization",res.signValue);
-                xhr.setRequestHeader("Content-Length",file.size);      
-                xhr.setRequestHeader("Date",new Date());      
-                xhr.send(file);
+              var n = new FormData;
+              n.append("file", file);
+              n.append("policy", decodeURIComponent(res.policy));
+              n.append("authorization", decodeURIComponent(res.value));
+              n.append("notify-url", "http://msg-upyun.linkmsg.net");
+              n.append("content-md5", md5);
+              n.append("date", decodeURIComponent(res.date))
+              $.ajax({
+                url: "http://v0.api.upyun.com/msg-upyun",
+                  type: "POST",
+                  data: n,
+                  contentType: false,
+                  processData: false,
+                  success:(data)=>{
+                    ossPost({
+                      type: "1",
+                      path: saveKey,
+                      filename: file.name,
+                      contentMd5: md5,
+                      contentLength: file.size,
+                      userId: this.props.userId,
+                      secret: ""
+                    }).then(data=>{
+                      this.props.getPicId(data.ossId),
+                      this.setState({
+                          ossId: data.ossId,
+                          currentPic: "http://msg-upyun.linkmsg.net" + data.url
+                      })
+                    })
+                  }
+              })
             })
           }
         );
       }
-      // this.setState({
-      //   files
-      // });
-      
-
-      
-      
-
-
+      this.setState({
+        files: files
+      })
     }
 
     onClose(key){
@@ -80,19 +87,19 @@ export default class ImagePickerExample extends React.Component {
 
   render() {
     const { files } = this.state;
+    console.log(files)
     return (
       <div>
         <ImagePicker
           files={files}
           onChange={this.onChange}
           onImageClick={(index, fs) =>{
-            console.log(fs)
             this.setState({
               currentPic:fs[0].url,modal1:true
             })
           }
           }
-          selectable={files.length < 10}
+          selectable={files.length < 1}
           accept="image/gif,image/jpeg,image/jpg,image/png"
         />
          <Modal

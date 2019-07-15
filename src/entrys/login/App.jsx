@@ -23,7 +23,7 @@ export default class App extends EntryBase {
     }
 
     componentDidMount() {
-        // super.componentDidMount();
+        
     }
 
     componentDidUpdate() {

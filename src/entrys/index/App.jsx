@@ -30,13 +30,15 @@ export default class App extends EntryBase {
     render() {
         return (
             <div className={style.container}>
-                <h2 className={style.title}>微贷网微贷网微贷网微贷网</h2>
+                <h2 className={style.title}>测试页面</h2>
                 <div className={style.cont}>
                         <WingBlank>
                             <Button onClick={()=>{
                                 window.location.href='./send.html';
                             }} type="primary">我要发送</Button><WhiteSpace size='lg'/>
-                            <Button type="ghost" className='am-button-borderfix'>我要接收</Button><WhiteSpace size='lg'/>
+                            <Button type="ghost" onClick={()=>{
+                                window.location.href = "./history.html"
+                            }} className='am-button-borderfix'>我要接收</Button><WhiteSpace size='lg'/>
                             <Button>我要了解</Button><WhiteSpace size='lg'/>
                             <Button onClick={()=>{
                                 window.location.href='./history.html';

@@ -48,3 +48,14 @@ export function oauth2(data) {
 }
 
 
+/**
+ * 上报发送信息
+ */
+export function info(data) {
+  return _fetch({
+    url: "/api/info",
+    method: "POST",
+    data: data,
+    headers: {}
+  });
+}
