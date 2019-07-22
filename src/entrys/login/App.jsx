@@ -8,8 +8,7 @@ import { Button, WhiteSpace,InputItem,List,Toast} from 'antd-mobile';
 import util from "commons/util";
 
 //api
-import { sms,queryUser,register } from "api/api";
-
+import { sms,queryUser,register,oauth2 } from "api/api";
 export default class App extends EntryBase {
     constructor(props) {
         super(props);

@@ -38,9 +38,11 @@ export default class App extends EntryBase {
                 userId: util.getCookie("userId"),
                 ossId: data.picId
             };
+            this.setState({
+                sendData: data,
+            }) 
             ossGet(ossParam).then(res=>{
                 this.setState({
-                    sendData: data,
                     imgSrc: "http://msg-upyun.linkmsg.net" + res.path
                 }) 
             })
