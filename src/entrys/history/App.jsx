@@ -3,16 +3,18 @@
  */
 import React from 'react';
 import EntryBase from '../Common/EntryBase';
-import { Button,Modal,List} from 'antd-mobile';
+import { Button,Modal,List,Toast} from 'antd-mobile';
 import style from './styles/App.less';
-
+import util from "commons/util";
 const alert = Modal.alert;
+import {infoList ,infoPut} from "api/api";
 
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
-            modal1:false
+            modal1:false,
+            historyList:[]
         }
     }
 
@@ -23,10 +25,22 @@ export default class App extends EntryBase {
     }
 
     componentDidMount() {
-      
+        super.componentDidMount();
+        this.getList();
     }
-    componentDidUpdate() {
-        
+    
+    getList(){
+        let param={
+            type: "2",
+            userId:util.getCookie("userId"),
+            size: 200,
+            offset: 0
+        }
+        infoList(param).then(data=>{
+            this.setState({
+                historyList:data.records
+            })
+        })
     }
   
     render() {
@@ -34,43 +48,39 @@ export default class App extends EntryBase {
             <div className={style.container}>
               <h2 className={style.title}>保存资料目录（按时间顺序）</h2>
               <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
-                <List.Item
-                extra={<Button type="warning" size="small" inline onClick={()=>{
-                    alert('提示', '是否确认删除该数据？', [
-                        { text: '取消', onPress: () => console.log('cancel') },
-                        { text: '确认', onPress: () => console.log('ok') },
-                      ])
-                }}>删除</Button>}
-                multipleLine
-                >
-                <Button style={{verticalAlign: 'middle',marginRight:'10px'}} onClick={()=>{
-                    window.location.href='recive.html'
-                }} className={style.x_left} type="ghost" size="small" inline>查看</Button>
-                Regional manager
-                </List.Item>
-
-                <List.Item
-                extra={<Button type="warning" size="small" inline>删除</Button>}
-                multipleLine
-                >
-                <Button style={{verticalAlign: 'middle',marginRight:'10px'}} className={style.x_left} type="ghost" size="small" inline>查看</Button>
-                Regional manager
-                </List.Item>
+                  {
+                      this.state.historyList.length ? this.state.historyList.map((item,index)=>{
+                        return <List.Item key={index}
+                            extra={<Button type="warning" size="small" inline onClick={()=>{
+                            alert('提示', '是否确认删除该数据？', [
+                                { text: '取消'},
+                                { text: '确认', onPress: () =>{
+                                    var param = {
+                                        type: "2",
+                                        remove: "1",
+                                        status: "4",
+                                        serialNo: item.serialNo,
+                                        userId: util.getCookie("userId")
+                                    };
+                                    infoPut(param).then(data=>{
+                                        Toast.success('删除成功');
+                                        this.getList();
+                                    })
+                                }},
+                              ])
+                        }}>删除</Button>}
+                        multipleLine
+                        >
+                        <Button style={{verticalAlign: 'middle',marginRight:'10px'}} onClick={()=>{
+                            window.location.href='recive.html'
+                        }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
+                            window.location.href = "recive.html?serialNo=" + item.serialNo
+                        }}>查看</Button>
+                        {item.createTime}
+                        </List.Item>
+                      }):<div>暂无数据</div>
+                  }
             </List>
-            {/* <Modal
-                visible={this.state.modal1}
-                transparent
-                maskClosable={false}
-                onClose={()=>{this.onClose('modal1')}}
-                title="提示"
-                footer={[{ text: 'Ok', onPress: () => { this.onClose('modal1')} }]}
-                >
-                <div>
-                您的资料已接收<br/>
-                时间：**年**月**日**点**分<br/>
-                将按照您设定的时间发送
-                </div>
-            </Modal> */}
             </div>
         )
     }

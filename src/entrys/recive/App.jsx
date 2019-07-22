@@ -5,15 +5,19 @@ import React from 'react';
 import style from './styles/App.less';
 import EntryBase from '../Common/EntryBase';
 import { Button, Badge, Tabs,TextareaItem,List,WhiteSpace, DatePicker,WingBlank} from 'antd-mobile';
-
+import util from "commons/util";
 import ImagePickerExample from '../send/ImagePickerExample'
+import {infoGet} from "api/api";
+import {ossGet} from 'api/api_oss'
 
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
             isSave:false,
-            sendDate:''
+            sendDate:'',
+            sendData:{},
+            imgSrc:''
         }
     }
 
@@ -23,14 +27,27 @@ export default class App extends EntryBase {
 
     }
 
-
     componentDidMount() {
-      
+        super.componentDidMount();
+        let param = {
+            serialNo: util.parseUrl(location.href).params.serialNo,
+            userId: util.getCookie("userId"),
+        };
+        infoGet(param).then(data=>{
+            var ossParam = {
+                userId: util.getCookie("userId"),
+                ossId: data.picId
+            };
+            ossGet(ossParam).then(res=>{
+                this.setState({
+                    sendData: data,
+                    imgSrc: "http://msg-upyun.linkmsg.net" + res.path
+                }) 
+            })
+        })
     }
 
-    componentDidUpdate() {
-        
-    }
+   
     render() {
         const tabs = [
             { title: <Badge>文字</Badge> },
@@ -42,8 +59,6 @@ export default class App extends EntryBase {
                     <Tabs tabs={tabs}
                         initialPage={0}
                         animated={false}
-                        // onChange={(tab, index) => { console.log('onChange', index, tab); this.changeTab(tab,index)}}
-                        // onTabClick={(tab, index) => { console.log('onTabClick', index, tab);this.changeTab(tab,index)}}
                     >
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#fff' }}>
                         <List>
@@ -51,9 +66,13 @@ export default class App extends EntryBase {
                                 placeholder='请输入内容'
                                 rows={15}
                                 count={300}
+                                value={this.state.sendData.text || ""}
                                 onChange={(areaValue)=>{
                                     this.setState({
-                                        areaValue
+                                        sendData:{
+                                            ...this.statesendData,
+                                            text:areaValue
+                                        }
                                 })
                             }}/>
                         </List>
@@ -61,11 +80,10 @@ export default class App extends EntryBase {
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#fff' }}>
                         <List>
-                            <ImagePickerExample/>
+                            <ImagePickerExample  currentPic={this.state.imgSrc}/>
                         </List>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#fff' }}>
-                            {/* <textarea name="" id="" cols="30" rows="10" className="tabWord"></textarea> */}
                         </div>
                     </Tabs>
                         <div className={style.actionBtn}>

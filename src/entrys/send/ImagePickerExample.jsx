@@ -16,11 +16,20 @@ export default class ImagePickerExample extends React.Component {
         this.state={
             files: data,
             modal1:false,
-            currentPic:"",
+            currentPic:'',
             ossId:''
         }
         this.onChange=this.onChange.bind(this);
     }
+
+    componentWillReceiveProps(nextProps){
+      if(this.state.currentPic!=nextProps.currentPic){
+        this.setState({
+          files:[{url:nextProps.currentPic}]
+        })
+      }
+    }
+    
 
     onChange(files, type, index){
       if(type=='add'){
@@ -87,7 +96,6 @@ export default class ImagePickerExample extends React.Component {
 
   render() {
     const { files } = this.state;
-    console.log(files)
     return (
       <div>
         <ImagePicker
@@ -95,7 +103,8 @@ export default class ImagePickerExample extends React.Component {
           onChange={this.onChange}
           onImageClick={(index, fs) =>{
             this.setState({
-              currentPic:fs[0].url,modal1:true
+              currentPic:fs[0].url,
+              modal1:true
             })
           }
           }

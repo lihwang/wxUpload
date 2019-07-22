@@ -59,3 +59,37 @@ export function info(data) {
     headers: {}
   });
 }
+
+//我要了解的列表
+export function infoGet(data) {
+  return _fetch({
+    url: "api/info",
+    method: "GET",
+    data: data,
+    headers: {}
+  });
+}
+
+//我要删除列表
+export function infoPut(data) {
+  return _fetch({
+    url: "api/info",
+    method: "PUT",
+    data: data,
+    headers: {}
+  });
+}
+
+//我要接收的历史记录
+export function infoList(data) {
+  return _fetch({
+    url: "api/infoList",
+    method: "GET",
+    data: data,
+    headers: {}
+  });
+}
+
+
+
+

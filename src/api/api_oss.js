@@ -24,3 +24,16 @@ export function ossPost(data) {
     headers: {}
   });
 }
+
+
+/**
+ * 对象存储数据获取 
+ */
+export function ossGet(data) {
+  return _fetch({
+    url: "/api/oss",
+    method: "GET",
+    data: data,
+    headers: {}
+  });
+}
