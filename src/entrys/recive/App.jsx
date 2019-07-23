@@ -4,12 +4,12 @@
 import React from 'react';
 import style from './styles/App.less';
 import EntryBase from '../Common/EntryBase';
-import { Button, Badge, Tabs,TextareaItem,List,WhiteSpace, DatePicker,WingBlank} from 'antd-mobile';
+import { Button, Badge, Tabs,TextareaItem,List,WhiteSpace, DatePicker,WingBlank,Modal,Toast} from 'antd-mobile';
 import util from "commons/util";
 import ImagePickerExample from '../send/ImagePickerExample'
-import {infoGet} from "api/api";
+import {infoGet,infoPut} from "api/api";
 import {ossGet} from 'api/api_oss'
-
+const alert = Modal.alert;
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
@@ -45,16 +45,27 @@ export default class App extends EntryBase {
                 this.setState({
                     imgSrc: "http://msg-upyun.linkmsg.net" + res.path
                 }) 
+            },(error)=>{
+                if(error.code==10010){
+                    this.setState({
+                        imgSrc:''
+                    })
+                }
             })
         })
     }
 
    
     render() {
-        const tabs = [
+        let tabs = [
             { title: <Badge>文字</Badge> },
             { title: <Badge>图片</Badge> },
         ];
+        if(!this.state.imgSrc){
+            tabs = [
+                { title: <Badge>文字</Badge> },
+            ];
+        }
         
         return (<div className={style.container}>
                     <div className={style.cont} hidden={this.state.isSave}>
@@ -69,14 +80,7 @@ export default class App extends EntryBase {
                                 rows={15}
                                 count={300}
                                 value={this.state.sendData.text || ""}
-                                onChange={(areaValue)=>{
-                                    this.setState({
-                                        sendData:{
-                                            ...this.statesendData,
-                                            text:areaValue
-                                        }
-                                })
-                            }}/>
+                            />
                         </List>
 
                         </div>
@@ -89,12 +93,29 @@ export default class App extends EntryBase {
                         </div>
                     </Tabs>
                         <div className={style.actionBtn}>
-                            <Button type="primary" inline size="small" style={{ marginRight: '40px' }}  onClick={()=>{this.downLoad}}>下载</Button>
                             <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={()=>{this.setState({isSave:true})}}>保存</Button>
-                            <Button type="primary" size="small" inline style={{ marginRight: '40px' }} >删除</Button>
+                            <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={()=>{
+                                      alert('提示', '是否确认删除该数据？', [
+                                        { text: '取消'},
+                                        { text: '确认', onPress: () =>{
+                                            var param = {
+                                                type: "1",
+                                                remove: "1",
+                                                status: "4",
+                                                serialNo: util.parseUrl(location.href).params.serialNo,
+                                                userId: util.getCookie("userId")
+                                            };
+                                            infoPut(param).then(data=>{
+                                                Toast.success('删除成功',1000,()=>{
+                                                    location.href=util.parseUrl(location.href).params.from+'.html';
+                                                });
+                                                
+                                            })
+                                        }},
+                                      ])
+                            }}>删除</Button>
                         </div>
                 </div>
-                {/* <Footer/> */}
                 <div className={style.savePage} hidden={!this.state.isSave}>
                     <WingBlank>
                         <div className={style.tips}>

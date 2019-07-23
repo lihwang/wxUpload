@@ -37,7 +37,7 @@ export default class App extends EntryBase {
                                 window.location.href='./send.html';
                             }} type="primary">我要发送</Button><WhiteSpace size='lg'/>
                             <Button type="ghost" onClick={()=>{
-                                window.location.href = "./history.html"
+                                window.location.href = "./reciveList.html"
                             }} className='am-button-borderfix'>我要接收</Button><WhiteSpace size='lg'/>
                             <Button>我要了解</Button><WhiteSpace size='lg'/>
                             <Button onClick={()=>{

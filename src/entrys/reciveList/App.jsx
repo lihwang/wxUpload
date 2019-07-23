@@ -8,10 +8,7 @@ import style from './styles/App.less';
 import util from "commons/util";
 const alert = Modal.alert;
 import {infoList ,infoPut} from "api/api";
-let status={
-    3:'待发送',
-    1:'发送成功'
-}
+
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
@@ -34,8 +31,8 @@ export default class App extends EntryBase {
     
     getList(){
         let param={
-            type: "1",
-            userId:util.getCookie("userId"),
+            type: "2",
+            toUserId:util.getCookie("userId"),
             size: 200,
             offset: 0
         }
@@ -49,7 +46,7 @@ export default class App extends EntryBase {
     render() {
         return (
             <div className={style.container}>
-              <h2 className={style.title}>保存资料目录（按时间顺序）</h2>
+              <h2 className={style.title}>接收资料目录（按时间顺序）</h2>
               <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
                   {
                       this.state.historyList.length ? this.state.historyList.map((item,index)=>{
@@ -59,7 +56,7 @@ export default class App extends EntryBase {
                                 { text: '取消'},
                                 { text: '确认', onPress: () =>{
                                     var param = {
-                                        type: "1",
+                                        type: "2",
                                         remove: "1",
                                         status: "4",
                                         serialNo: item.serialNo,
@@ -77,9 +74,9 @@ export default class App extends EntryBase {
                         <Button style={{verticalAlign: 'middle',marginRight:'10px'}} onClick={()=>{
                             window.location.href='recive.html'
                         }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
-                            window.location.href = "recive.html?from=history&serialNo=" + item.serialNo
+                            window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
                         }}>查看</Button>
-                        <span style={{fontSize: 28}}>{item.createTime}{status[item.status]?(' | '+status[item.status]):''}</span>
+                        {item.createTime}
                         </List.Item>
                       }):<div style={{textAlign:'center',padding:30}}>
                           <div><Icon type="cross-circle" size="large" /></div>

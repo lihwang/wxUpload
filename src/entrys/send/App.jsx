@@ -92,7 +92,15 @@ export default class App extends EntryBase {
         info(param).then(res=>{
             this.setState({
                 payParam:res
+            },()=>{
+                Toast.success("信息发送成功！");
             })
+        },(error)=>{
+            if(error&&error.code==10020){
+                Toast.fail("您输入的好友未注册，请提示好友注册！");
+            }else{
+                error&&error.message&&Toast.fail(error.message);
+            }
         })
     }
 
