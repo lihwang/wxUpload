@@ -102,7 +102,7 @@ export default class App extends EntryBase {
             }
             let registerData={
                 mobile:this.state.phone.replace(/\s+/g,""),
-                openId:util.getCookie('openId'),
+                openid:util.getCookie('openId'),
                 smsCode:this.state.msgCode,
                 password:'',
                 sign:'abc'
