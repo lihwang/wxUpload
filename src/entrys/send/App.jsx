@@ -20,12 +20,12 @@ export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
-            phone:'17602154326',   //手机号
+            phone:'',   //手机号
             sendDate: new Date,   //发送时间
             cancelDate: '', //取消时间
-            firstpw:'12',     //第一次密码
-            secondpw:'12',   //第二次密码
-            areaValue:'1',  //文本域值
+            firstpw:'',     //第一次密码
+            secondpw:'',   //第二次密码
+            areaValue:'',  //文本域值
             isHiddenTextArea:true, //文本域隐藏
             isHiddenPic:true, //照片显示隐藏
             modal1:false,    //弹窗

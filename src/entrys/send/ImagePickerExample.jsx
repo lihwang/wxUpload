@@ -23,7 +23,7 @@ export default class ImagePickerExample extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-      if(this.state.currentPic!=nextProps.currentPic){
+      if(nextProps.currentPic&&this.state.currentPic!=nextProps.currentPic){
         this.setState({
           files:[{url:nextProps.currentPic}]
         })
@@ -96,6 +96,7 @@ export default class ImagePickerExample extends React.Component {
 
   render() {
     const { files } = this.state;
+    console.log("files",files)
     return (
       <div>
         <ImagePicker
