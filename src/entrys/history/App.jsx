@@ -74,12 +74,15 @@ export default class App extends EntryBase {
                         }}>删除</Button>}
                         multipleLine
                         >
-                        <Button style={{verticalAlign: 'middle',marginRight:'10px'}} onClick={()=>{
+                        <Button style={{marginRight:'15px'}} onClick={()=>{
                             window.location.href='recive.html'
                         }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
                             window.location.href = "recive.html?from=history&serialNo=" + item.serialNo
                         }}>查看</Button>
-                        <span style={{fontSize: 28}}>{item.createTime}{status[item.status]?(' | '+status[item.status]):''}</span>
+                            <div style={{fontSize: 28,display:'inline-block'}}>
+                                <span>{item.createTime}{status[item.status]?(' | '+status[item.status]):''}</span><br/>
+                                <span>序列号:{item.serialNo}</span>
+                            </div>
                         </List.Item>
                       }):<div style={{textAlign:'center',padding:30}}>
                           <div><Icon type="cross-circle" size="large" /></div>

@@ -160,13 +160,13 @@ export default class App extends EntryBase {
                         onChange={sendDate => this.setState({sendDate})}>
                         <List.Item arrow="horizontal">设定发送时间</List.Item>
                     </DatePicker>
-                    <WhiteSpace size='lg'/>
+                    {/* <WhiteSpace size='lg'/>
                     <DatePicker
                         minuteStep={5}
                         value={this.state.sendDate}
                         onChange={sendDate => this.setState({sendDate})}>
                         <List.Item arrow="horizontal">设定取消提醒</List.Item>
-                    </DatePicker>
+                    </DatePicker> */}
                     <WhiteSpace size='lg'/>
                     <InputItem maxLength='6' value={this.state.firstpw}  onChange={firstpw => this.setState({firstpw})} type="password" placeholder="****">密码</InputItem>
                     <WhiteSpace size='lg'/>

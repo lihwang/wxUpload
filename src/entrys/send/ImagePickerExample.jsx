@@ -110,7 +110,7 @@ export default class ImagePickerExample extends React.Component {
           }
           }
           selectable={files.length < 1}
-          accept="image/gif,image/jpeg,image/jpg,image/png"
+          // accept="image/gif,image/jpeg,image/jpg,image/png"
         />
          <Modal
           visible={this.state.modal1}
