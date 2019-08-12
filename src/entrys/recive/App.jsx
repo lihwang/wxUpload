@@ -106,10 +106,12 @@ export default class App extends EntryBase {
                                                 userId: util.getCookie("userId")
                                             };
                                             infoPut(param).then(data=>{
-                                                Toast.success('删除成功',1000,()=>{
+                                                Toast.success('删除成功',1000);
+                                                setTimeout(()=>{
                                                     location.href=util.parseUrl(location.href).params.from+'.html';
-                                                });
-                                                
+                                                })
+                                            },(error)=>{
+                                                error&&error.message&&Toast.fail(error.message);
                                             })
                                         }},
                                       ])

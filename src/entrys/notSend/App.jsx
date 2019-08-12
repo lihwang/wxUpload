@@ -47,7 +47,7 @@ export default class App extends EntryBase {
     render() {
         return (
             <div className={style.container}>
-              <h2 className={style.title}>取消发送选择（按时间顺序）</h2>
+              <h2 className={style.title}>取消发送（按时间顺序）</h2>
               <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
                   {
                       this.state.historyList.length ? this.state.historyList.map((item,index)=>{
@@ -74,7 +74,7 @@ export default class App extends EntryBase {
                         <Button style={{marginRight:'10px',verticalAlign: 'top',marginTop:'20px'}} onClick={()=>{
                             window.location.href='recive.html'
                         }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
-                            window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
+                            window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
                         }}>查看</Button>
                             <div style={{fontSize: 28,display:'inline-block'}}>
                                 <span>{item.createTime}</span><br/>
