@@ -66,6 +66,7 @@ export default class App extends EntryBase {
                 { title: <Badge>文字</Badge> },
             ];
         }
+        let from=util.parseUrl(location.href).params.from;
         
         return (<div className={style.container}>
                     <div className={style.cont} hidden={this.state.isSave}>
@@ -92,7 +93,7 @@ export default class App extends EntryBase {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#fff' }}>
                         </div>
                     </Tabs>
-                        <div className={style.actionBtn}>
+                        <div hidden={from=='notSend'} className={style.actionBtn}>
                             <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={()=>{this.setState({isSave:true})}}>保存</Button>
                             <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={()=>{
                                       alert('提示', '是否确认删除该数据？', [
