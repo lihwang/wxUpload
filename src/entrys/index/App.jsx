@@ -43,7 +43,9 @@ export default class App extends EntryBase {
                             <Button onClick={()=>{
                                 window.location.href='./history.html';
                             }}>我要查询历史保存资料</Button><WhiteSpace size='lg'/>
-                            <Button type="warning">删除数据</Button><WhiteSpace size='lg'/>
+                            <Button type="warning" onClick={()=>{
+                                window.location.href='./notSend.html';
+                            }}>取消发送</Button><WhiteSpace size='lg'/>
                             <div className={style.qrcode}></div>
                         </WingBlank>
                 </div>

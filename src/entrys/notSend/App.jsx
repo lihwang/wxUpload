@@ -1,60 +1,91 @@
 /**
- * @description 产品介绍
+ * @description 取消发送
  */
 import React from 'react';
-import style from './styles/App.less';
 import EntryBase from '../Common/EntryBase';
-import { Button, WhiteSpace, DatePicker, List, Checkbox, Flex } from 'antd-mobile';
-const CheckboxItem = Checkbox.CheckboxItem;
+import { Button,Modal,List,Toast,Icon} from 'antd-mobile';
+import style from './styles/App.less';
+import util from "commons/util";
+const prompt = Modal.prompt;
+import {infoList ,infoPut} from "api/api";
 
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
-            date: new Date(),
-            time: new Date(),
+            modal1:false,
+            historyList:[]
         }
     }
 
-    onChange=(val)=>{
-        console.log(val)
+    onClose(key){
+        this.setState({
+        [key]: false,
+        });
     }
-
 
     componentDidMount() {
-      
+        super.componentDidMount();
+        this.getList();
     }
-
-    componentDidUpdate() {
-        
+    
+    getList(){
+        let param={
+            type: "1",
+            userId:util.getCookie("userId"),
+            size: 200,
+            offset: 0,
+            status:'3'
+        }
+        infoList(param).then(data=>{
+            this.setState({
+                historyList:data.records
+            })
+        })
     }
+  
     render() {
-        const data = [
-            { value: 0, label: 'Ph.D.' },
-            { value: 1, label: 'Bachelor' },
-            { value: 2, label: 'College diploma' },
-        ];
-        return (<div className={style.container}>
-                    {/* <Header/> */}
-            <div className="tips">取消发送选择 按时间</div>
-            <WhiteSpace size='lg' />
-            <div className="timeSet">
-                <DatePicker
-                    // minuteStep={4}
-                    value={this.state.date}
-                    onChange={date => this.setState({ date })}>
-                    <List.Item arrow="horizontal">设定取消时间</List.Item>
-                </DatePicker>
-            </div>
-            <List renderHeader={() => 'CheckboxItem demo'}>
-                {data.map(i => (
-                    <CheckboxItem key={i.value} onChange={() => this.onChange(i.value)}>
-                        {i.label}
-                    </CheckboxItem>
-                ))}
-                {/* <CheckboxItem key="disabled" data-seed="logId" disabled defaultChecked multipleLine>
-                    Undergraduate<List.Item.Brief>Auxiliary text</List.Item.Brief>
-                </CheckboxItem> */}
+        return (
+            <div className={style.container}>
+              <h2 className={style.title}>取消发送选择（按时间顺序）</h2>
+              <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
+                  {
+                      this.state.historyList.length ? this.state.historyList.map((item,index)=>{
+                        return <List.Item key={index}
+                            extra={<Button type="warning" size="small" inline onClick={()=>{
+                            prompt('提示', '是否确认取消该数据？', (password)=>{
+                                var param = {
+                                    type: "1",
+                                    status: "2",
+                                    serialNo: item.serialNo,
+                                    userId: util.getCookie("userId"),
+                                    password:password
+                                };
+                                infoPut(param).then(data=>{
+                                    Toast.success('取消成功');
+                                    this.getList();
+                                },(error)=>{
+                                    error&&error.message&&Toast.fail(error.message);
+                                })
+                            },'secure-text','',['请输入取消密码'])
+                        }}>取消</Button>}
+                        multipleLine
+                        >
+                        <Button style={{marginRight:'10px',verticalAlign: 'top',marginTop:'20px'}} onClick={()=>{
+                            window.location.href='recive.html'
+                        }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
+                            window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
+                        }}>查看</Button>
+                            <div style={{fontSize: 28,display:'inline-block'}}>
+                                <span>{item.createTime}</span><br/>
+                                <span>序列号:{item.serialNo}</span>
+                            </div>
+                        </List.Item>
+                      }):<div style={{textAlign:'center',padding:30}}>
+                          <div><Icon type="cross-circle" size="large" /></div>
+                            <div>暂无数据</div>
+                          </div>
+                  }
             </List>
             </div>
         )

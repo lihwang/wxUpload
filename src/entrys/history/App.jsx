@@ -54,7 +54,7 @@ export default class App extends EntryBase {
                   {
                       this.state.historyList.length ? this.state.historyList.map((item,index)=>{
                         return <List.Item key={index}
-                            extra={<Button type="warning" size="small" inline onClick={()=>{
+                            extra={<Button type="warning" size="small" style={{verticalAlign: 'sub'}} inline onClick={()=>{
                             alert('提示', '是否确认删除该数据？', [
                                 { text: '取消'},
                                 { text: '确认', onPress: () =>{
@@ -74,7 +74,7 @@ export default class App extends EntryBase {
                         }}>删除</Button>}
                         multipleLine
                         >
-                        <Button style={{marginRight:'15px'}} onClick={()=>{
+                        <Button style={{marginRight:'10px',verticalAlign: 'top',marginTop:'20px'}} onClick={()=>{
                             window.location.href='recive.html'
                         }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
                             window.location.href = "recive.html?from=history&serialNo=" + item.serialNo
