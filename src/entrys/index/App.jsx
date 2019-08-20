@@ -30,7 +30,7 @@ export default class App extends EntryBase {
     render() {
         return (
             <div className={style.container}>
-                <h2 className={style.title}>测试页面</h2>
+                <h2 className={style.title}>天易智联时光胶囊</h2>
                 <div className={style.cont}>
                         <WingBlank>
                             <Button onClick={()=>{
@@ -46,7 +46,7 @@ export default class App extends EntryBase {
                             <Button type="warning" onClick={()=>{
                                 window.location.href='./notSend.html';
                             }}>取消发送</Button><WhiteSpace size='lg'/>
-                            <div className={style.qrcode}></div>
+                            {/* <div className={style.qrcode}></div> */}
                         </WingBlank>
                 </div>
             </div>
