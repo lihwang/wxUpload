@@ -54,10 +54,10 @@ export default class App extends EntryBase {
            },
            function(res){
            if(res.err_msg == "get_brand_wcpay_request:ok" ){
-                Toast.success("支付且信息发送成功！");
+                Toast.success("支付成功且信息准备发送！",3000);
                 setTimeout(()=>{
                     location.href='index.html';
-                },1000)
+                },3000)
            } 
         }); 
      }
