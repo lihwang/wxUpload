@@ -42,6 +42,27 @@ export default class App extends EntryBase {
       super.componentDidMount();
     }
 
+     onBridgeReady=()=>{
+        WeixinJSBridge.invoke(
+           'getBrandWCPayRequest', {
+              "appId":this.state.payParam.appId,     //公众号名称，由商户传入     
+              "timeStamp":this.state.payParam.timeStamp,         //时间戳，自1970年以来的秒数     
+              "nonceStr":this.state.payParam.nonceStr, //随机串     
+              "package":this.state.payParam.package,     
+              "signType":this.state.payParam.signType,         //微信签名方式：     
+              "paySign": this.state.payParam.paySign,//微信签名 
+           },
+           function(res){
+           if(res.err_msg == "get_brand_wcpay_request:ok" ){
+                Toast.success("支付且信息发送成功！");
+                setTimeout(()=>{
+                    location.href='index.html';
+                },1000)
+           } 
+        }); 
+     }
+     
+
 
     onClose(key){
         this.setState({
@@ -91,9 +112,18 @@ export default class App extends EntryBase {
         };
         info(param).then(res=>{
             this.setState({
-                payParam:res
+                payParam:res.payargs
             },()=>{
-                Toast.success("信息发送成功！");
+                if (typeof WeixinJSBridge == "undefined"){
+                    if( document.addEventListener ){
+                        document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false);
+                    }else if (document.attachEvent){
+                        document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady); 
+                        document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady);
+                    }
+                 }else{
+                    this.onBridgeReady();
+                 }
             })
         },(error)=>{
             if(error&&error.code==10020){

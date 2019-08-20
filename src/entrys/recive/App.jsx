@@ -7,7 +7,7 @@ import EntryBase from '../Common/EntryBase';
 import { Button, Badge, Tabs,TextareaItem,List,WhiteSpace, DatePicker,WingBlank,Modal,Toast} from 'antd-mobile';
 import util from "commons/util";
 import ImagePickerExample from '../send/ImagePickerExample'
-import {infoGet,infoPut} from "api/api";
+import {infoGet,infoPut,info} from "api/api";
 import {ossGet} from 'api/api_oss'
 const alert = Modal.alert;
 export default class App extends EntryBase {
@@ -128,7 +128,16 @@ export default class App extends EntryBase {
                             <DatePicker
                                 minuteStep={5}
                                 value={this.state.sendDate}
-                                onChange={sendDate => this.setState({sendDate})}>
+                                onChange={sendDate => {
+                                    let {mobile,orderNo,userId}=this.state.sendData;
+                                    info({
+                                        mobile:mobile,
+                                        orderNo:orderNo,
+                                        userId:userId,
+                                        
+                                    })
+                                    this.setState({sendDate})
+                                }}>
                                 <List.Item arrow="horizontal">保存至</List.Item>
                             </DatePicker>
                         <WhiteSpace size='lg'/>
