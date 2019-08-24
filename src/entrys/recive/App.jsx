@@ -67,7 +67,7 @@ export default class App extends EntryBase {
             ];
         }
         let from=util.parseUrl(location.href).params.from;
-        
+        console.log(this.state.imgSrc)
         return (<div className={style.container}>
                     <div className={style.cont} hidden={this.state.isSave}>
                     <Tabs tabs={tabs}

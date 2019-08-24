@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-07-11 21:19:47
+ * @LastEditTime: 2019-08-24 08:40:14
+ * @LastEditors: Please set LastEditors
+ */
 let util = {};
 
 //解析URL查询参数
@@ -618,7 +625,6 @@ util.setCookie = function (name, value, expires, path, domain, secure) {
 //获取cookie
 util.getCookie=function(name){
   var cookies = document.cookie.split(";");
-  console.log(cookies);
   for (var i = 0; i < cookies.length; i++) {
       var cookieCrumbs = cookies[i].split("=");
       var cookieName = cookieCrumbs[0].replace(/(^\s*)|(\s*$)/g, "");

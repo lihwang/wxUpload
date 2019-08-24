@@ -8,19 +8,22 @@ import {sign,ossPost} from "api/api_oss";
 
 const bmf = new BMF();
 
-const data = [];
-
 export default class ImagePickerExample extends React.Component {
     constructor(props){
         super(props);
         this.state={
-            files: data,
+            files: props.currentPic?[{url:props.currentPic}]:[],
             modal1:false,
-            currentPic:'',
+            currentPic:props.currentPic||'',
             ossId:''
         }
         this.onChange=this.onChange.bind(this);
     }
+
+    componentDidMount() {
+      
+    }
+    
 
     componentWillReceiveProps(nextProps){
       if(nextProps.currentPic&&this.state.currentPic!=nextProps.currentPic){
@@ -96,7 +99,6 @@ export default class ImagePickerExample extends React.Component {
 
   render() {
     const { files } = this.state;
-    console.log("files",files)
     return (
       <div>
         <ImagePicker
