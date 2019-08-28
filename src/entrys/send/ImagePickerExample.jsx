@@ -74,7 +74,7 @@ export default class ImagePickerExample extends React.Component {
                       userId: this.props.userId,
                       secret: ""
                     }).then(data=>{
-                      this.props.getPicId(data.ossId),
+                      this.props.getPicId&&this.props.getPicId(data.ossId),
                       this.setState({
                           ossId: data.ossId,
                           currentPic: "http://msg-upyun.linkmsg.net" + data.url

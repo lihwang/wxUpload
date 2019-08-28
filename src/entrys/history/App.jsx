@@ -17,7 +17,16 @@ export default class App extends EntryBase {
         super(props);
         this.state = {
             modal1:false,
-            historyList:[]
+            historyList:[],
+            // 正在加载
+            isLoading: false,
+
+            // 没有更多资源
+            noMoreResource: false,
+
+            // 记录scrollview-height
+            recordBoxHeight: window.innerHeight,
+            offset:0
         }
     }
 
@@ -27,21 +36,71 @@ export default class App extends EntryBase {
         });
     }
 
+        // 滚动
+    onScroll=()=> {
+        let bT = window.scrollY;// body滚动距离
+        let bH = document.body.clientHeight;// body内容高度
+        let wH = window.innerHeight;// 可视区域高
+        console.log(bT, wH , bH)
+        if (bT + wH + 2 >= bH) { //到达底部时,加载新内容
+            this.onEndReached();
+        }
+    }
+
+
+    onEndReached=()=> {
+        if (this.state.isLoading || this.state.noMoreResource) {
+            return;
+        }
+
+        this.setState({
+            isLoading: true
+        });
+
+        this.setState({
+            offset: this.state.offset + 1
+        }, () => {
+            this.getRecords();
+        })
+    }
+
+    httpCallBack(backDatas) {
+        this.setState({
+          isLoading: false
+        });
+    
+        if (backDatas.length < 10) {
+          this.setState({
+            noMoreResource: true
+          })
+        } else {
+          this.setState({
+            noMoreResource: false
+          })
+        }
+    }
+
     componentDidMount() {
         super.componentDidMount();
-        this.getList();
+        document.addEventListener('scroll', this.onScroll);//添加监听滚动
+        this.getRecords();
     }
+    componentWillUnmount() {
+        document.removeEventListener('scroll', this.onScroll);//移除监听滚动
+      }
     
-    getList(){
+    getRecords(){
         let param={
             type: "1",
             userId:util.getCookie("userId"),
-            size: 200,
-            offset: 0
+            size: 10,
+            offset: this.state.offset
         }
         infoList(param).then(data=>{
             this.setState({
-                historyList:data.records
+                historyList:[...this.state.historyList,...data.records],
+            },()=>{
+                this.httpCallBack(data.records)
             })
         })
     }
