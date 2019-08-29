@@ -123,7 +123,11 @@ export default class App extends EntryBase {
                                         };
                                         infoPut(param).then(data => {
                                             Toast.success('取消成功');
-                                            this.getList();
+                                            let historyList=this.state.historyList;
+                                            historyList.splice(index,1);
+                                            this.setState({
+                                                historyList:historyList
+                                            })
                                         }, (error) => {
                                             error && error.message && Toast.fail(error.message);
                                         })

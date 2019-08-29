@@ -122,7 +122,11 @@ export default class App extends EntryBase {
                                     };
                                     infoPut(param).then(data=>{
                                         Toast.success('删除成功');
-                                        this.getList();
+                                        let historyList=this.state.historyList;
+                                        historyList.splice(index,1);
+                                        this.setState({
+                                            historyList:historyList
+                                        })
                                     })
                                 }},
                               ])
@@ -142,7 +146,7 @@ export default class App extends EntryBase {
                       }):<div style={{textAlign:'center',padding:30}}>
                           <div><Icon type="cross-circle" size="large" /></div>
                             <div>暂无数据</div>
-                          </div>
+                        </div>
                   }
             </List>
             </div>

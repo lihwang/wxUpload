@@ -113,7 +113,7 @@ export default class App extends EntryBase {
                   {
                       this.state.historyList.length ? this.state.historyList.map((item,index)=>{
                         return <List.Item key={index}
-                            extra={<Button type="warning" size="small" style={{verticalAlign: 'sub'}} inline onClick={()=>{
+                            extra={item.status!=0?<Button type="warning" size="small" style={{verticalAlign: 'sub'}} inline  onClick={()=>{
                             alert('提示', '是否确认删除该数据？', [
                                 { text: '取消'},
                                 { text: '确认', onPress: () =>{
@@ -126,11 +126,15 @@ export default class App extends EntryBase {
                                     };
                                     infoPut(param).then(data=>{
                                         Toast.success('删除成功');
-                                        this.getList();
+                                        let historyList=this.state.historyList;
+                                        historyList.splice(index,1);
+                                        this.setState({
+                                            historyList:historyList
+                                        })
                                     })
                                 }},
                               ])
-                        }}>删除</Button>}
+                        }}>删除</Button>:''}
                         multipleLine
                         >
                         <Button style={{marginRight:'10px',verticalAlign: 'top',marginTop:'20px'}} onClick={()=>{
