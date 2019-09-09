@@ -682,6 +682,58 @@ util.formatQuery=function(obj, separator = "&", equal = "=") {
   return parts.join(separator);
 }
 
+util.jsonURLParams=function(json,reverse){
+  // 创建一个空数组
+  var jsonArr = [];
+  // 往空数组里面导入json对象
+  for(var i in json){
+      var obj = {}
+      obj[i] = json[i];
+      jsonArr.push(obj);
+  }
+  // 数组长度小于2  或 不是json格式数据
+  if(jsonArr.length < 2 || typeof jsonArr[0] !== "object") return jsonArr;
+  // 数字类型排序        
+  if(typeof getKey(jsonArr[0]) === "number") {
+      jsonArr.sort(function(x, y) { return getKey(x) - getKey(y)});
+  }
+  // 字符串类型排序
+  if(typeof getKey(jsonArr[0]) === "string") {
+      // 按字符编码的顺序来排序
+      jsonArr.sort(function(x, y) {
+　　　　 　　var lenX = getKey(x).length,lenY = getKey(y).length,len = (lenX <= lenY) ? lenX : lenY;
+　　　　　 　for (var i = 0; i < len; i++) {
+　　　　　　　　if (getKey(x).charCodeAt(i) != getKey(y).charCodeAt(i)) {
+　　　　　　　　　　return getKey(x).charCodeAt(i) - getKey(y).charCodeAt(i);
+　　　　　　　　}
+　　　　　　　　if (i == len - 1) {
+　　　　　　　　　  return getKey(x).length - getKey(y).length;
+　　　　　　　　}
+　　　　　　 }
+　　　　 })
+  }        
+  // 倒序
+  if(reverse) {
+      jsonArr.reverse();
+  }        
+  // 创建一个空字符串
+  var jsonString = "";    
+  for(var i in jsonArr){
+      if(i < jsonArr.length - 1){                
+          jsonString += getKey(jsonArr[i]) + "=" + jsonArr[i][getKey(jsonArr[i])] + "&"                            
+      }else{
+          jsonString += getKey(jsonArr[i]) + "=" + jsonArr[i][getKey(jsonArr[i])]
+      }
+  }
+  // 封装函数获取json的key
+  function getKey(json){
+      for(var i in json){
+          return i;
+      }
+  }            
+  return jsonString;
+}    
+
 
 
 export default util;

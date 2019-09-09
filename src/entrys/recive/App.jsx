@@ -94,7 +94,7 @@ export default class App extends EntryBase {
                         </div>
                     </Tabs>
                         <div hidden={from=='notSend'} className={style.actionBtn}>
-                            {/* <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={()=>{this.setState({isSave:true})}}>保存</Button> */}
+                            <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={()=>{this.setState({isSave:true})}}>保存</Button>
                             <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={()=>{
                                       alert('提示', '是否确认删除该数据？', [
                                         { text: '取消'},

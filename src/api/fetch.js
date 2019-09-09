@@ -63,9 +63,14 @@ _fetch.interceptors.request.use(function (config) {
     }
     
     config.data = Object.assign({ timestamp: Date.parse(new Date())/1000,caller:'apiUser@wxapp.linkmsg.net',orderNo:util.randomString()}, config.data);
+    let test={"timestamp":"1567526868",
+    "caller":"apiUser@wxapp.linkmsg.net",
+    "orderNo":"5zTbaGbzJp282JRrNPCs6iGcQiKFe6iy",
+    "type":"1","userId":"5638100000017","size":"10","offset":"2"};
     rsa=Jsrsasign.KEYUTIL.getKey(privateKey);
-    let sign=rsa.signString(util.sort_ASCII(config.data),hashAlg);
-    sign=Jsrsasign.hex2b64(sign);
+    let sign=rsa.signString(util.jsonURLParams(test),hashAlg);
+    sign=Jsrsasign.b64toBA(sign);
+    console.log(sign)
     // get传参
     if (config.method == "get" && config.data) {
         config.url += `?${util.formatQuery({...config.data,sign})}`
