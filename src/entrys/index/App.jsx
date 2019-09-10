@@ -23,9 +23,6 @@ export default class App extends EntryBase {
         
 
     }
-    componentDidUpdate() {
-        
-    }
   
     render() {
         return (
@@ -39,14 +36,18 @@ export default class App extends EntryBase {
                             <Button type="ghost" onClick={()=>{
                                 window.location.href = "./reciveList.html"
                             }} className='am-button-borderfix'>我要接收</Button><WhiteSpace size='lg'/>
-                            <Button>我要了解</Button><WhiteSpace size='lg'/>
+                            <Button onClick={()=>{
+                                location.href="./connect.html"
+                            }}>联系我们</Button><WhiteSpace size='lg'/>
                             <Button onClick={()=>{
                                 window.location.href='./history.html';
-                            }}>我要查询历史保存资料</Button><WhiteSpace size='lg'/>
+                            }} type="ghost">我要查询历史保存资料</Button><WhiteSpace size='lg'/>
+                            <Button onClick={()=>{
+                                location.href="./usage.html"
+                            }}>使用说明</Button><WhiteSpace size='lg'/>
                             <Button type="warning" onClick={()=>{
                                 window.location.href='./notSend.html';
                             }}>取消发送</Button><WhiteSpace size='lg'/>
-                            {/* <div className={style.qrcode}></div> */}
                         </WingBlank>
                 </div>
             </div>

@@ -113,7 +113,7 @@ export default class App extends EntryBase {
                         this.state.historyList.length ? this.state.historyList.map((item, index) => {
                             return <List.Item key={index}
                                 extra={<Button type="warning" size="small" inline onClick={() => {
-                                    prompt('提示', '是否确认取消该数据？', (password) => {
+                                    prompt('提示', '是否确认取消该数据(输入错误密码，系统自动发送，不可逆)？', (password) => {
                                         var param = {
                                             type: "1",
                                             status: "2",

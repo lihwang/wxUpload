@@ -3,12 +3,7 @@ import config from 'commons/config';
 import qs from "qs";
 import {Toast} from 'antd-mobile';
 import util from "commons/util";
-import Jsrsasign from "jsrsasign";
-
-// 实例化rsa
-var rsa=new Jsrsasign.RSAKey();
-// 选择哪种hash算法（散列生成一个报文摘要，目的是防篡改）
-var hashAlg="sha1";
+import crypto from "crypto-browserify";
 
 
 // 请求超时
@@ -50,8 +45,23 @@ k/Ws7YbL5p4iqTNxLY8ktBVo5nmtefOCmQ/1+l6E7Q2kqiU7LU+aXMdui9V0l4sw
 Zztd0y9o+ShtdAzly+ECQBM5CzKWPfKTqcwZ2el72LjVVFxVN3WdrnrkyGCXiTLq
 At9mgUC0H+2UdNPfNAfhfVrlF5kfqj/LKTbKtbwgy14=
 -----END RSA PRIVATE KEY-----`;
-
-
+let algorithm = 'sha1';
+function apiSign(algorithm, privateKey, data){
+    let sign = crypto.createSign(algorithm);
+    // let str = signStr(data);
+    sign.update(data);
+    let sig = sign.sign(privateKey, 'base64');
+    return sig;
+  };
+// function signStr(data){
+// var arr = [];
+// for(let key in data){
+//     if (typeof(data[key]) !== 'object'){
+//     arr.push(key + "=" + data[key]);
+//     };
+// };
+// return arr.sort().join("&");
+// };
 // 请求拦截器
 _fetch.interceptors.request.use(function (config) {
     // REST风格接口
@@ -63,15 +73,10 @@ _fetch.interceptors.request.use(function (config) {
     }
     
     config.data = Object.assign({ timestamp: Date.parse(new Date())/1000,caller:'apiUser@wxapp.linkmsg.net',orderNo:util.randomString()}, config.data);
-    let test={"timestamp":"1567526868",
-    "caller":"apiUser@wxapp.linkmsg.net",
-    "orderNo":"5zTbaGbzJp282JRrNPCs6iGcQiKFe6iy",
-    "type":"1","userId":"5638100000017","size":"10","offset":"2"};
-    rsa=Jsrsasign.KEYUTIL.getKey(privateKey);
-    let sign=rsa.signString(util.jsonURLParams(test),hashAlg);
-    sign=Jsrsasign.b64toBA(sign);
-    console.log(sign)
-    // get传参
+    // console.log(algorithm,privateKey,util.jsonURLParams(config.data))
+    // let sign=apiSign(algorithm,privateKey,util.jsonURLParams(config.data));
+    // console.log(sign)
+    let sign=1;
     if (config.method == "get" && config.data) {
         config.url += `?${util.formatQuery({...config.data,sign})}`
     }

@@ -4,14 +4,16 @@
 import React from 'react';
 import style from './styles/App.less';
 import EntryBase from '../Common/EntryBase';
+import PhoneInput from './PhoneInput'
 import {
     List,
     DatePicker,
     Flex,
     Button,
     InputItem,
-    WhiteSpace,TextareaItem,Modal,Toast
+    WhiteSpace,TextareaItem,Modal,Toast,Checkbox
 } from 'antd-mobile';
+const AgreeItem = Checkbox.AgreeItem;
 import ImagePickerExample from './ImagePickerExample'
 import util from "commons/util";
 
@@ -20,8 +22,8 @@ export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
-            phone:'',   //手机号
-            sendDate: new Date,   //发送时间
+            phoneList:[{phone:'',id:'id'+new Date().getTime()}],//手机列表
+            sendDate: new Date(+new Date() + 5 * 60000),   //发送时间(5分钟后)
             cancelDate: '', //取消时间
             firstpw:'',     //第一次密码
             secondpw:'',   //第二次密码
@@ -29,13 +31,14 @@ export default class App extends EntryBase {
             isHiddenTextArea:true, //文本域隐藏
             isHiddenPic:true, //照片显示隐藏
             modal1:false,    //弹窗
-            hasError:true,  //手机号错误
             ossId:'',
             picId: "",
             vedioId: "",
             topic: "测试",
-            payParam: {}
+            payParam: {},
+            hasQuestion:false
         }
+        this.canClick=true;
     }
 
     componentDidMount() {
@@ -76,24 +79,25 @@ export default class App extends EntryBase {
         })
     }
 
-    onChange = (phone) => {
-        if (phone.replace(/\s/g, '').length < 11) {
-          this.setState({
-            hasError: true,
-          });
-        } else {
-          this.setState({
-            hasError: false,
-          });
-        }
+    addPhone=()=>{
         this.setState({
-          phone
-        });
+            phoneList:[...this.state.phoneList,{phone:'',id:'id'+new Date().getTime()}]
+        })
     }
 
+
     sendInfo=()=>{
+        let phoneList=this.state.phoneList;
+        for(let i=0;i<phoneList.length;i++){
+            if(!!phoneList[i].phone){
+                if(!/^1\d{10}/.test(phoneList[i].phone.replace(/\s/g, ''))){
+                    return    Toast.fail(`第${i+1}个手机格式有问题`);
+                }
+            }else{
+                return Toast.fail(`第${i+1}个手机号为空`);
+            }
+        }
         if (!this.state.areaValue) return Toast.fail("存储文字必填！");
-        if (!this.state.phone) return Toast.fail("手机号必填！");
         if (!this.state.firstpw) return Toast.fail("取消密码必填！");
         if (!this.state.secondpw) return Toast.fail("确认取消密码必填！");
         if (!this.state.sendDate) return Toast.fail("发送时间必填！");
@@ -110,28 +114,33 @@ export default class App extends EntryBase {
             vedioId: this.state.vedioId,
             planTime:util.msecToString(new Date(this.state.sendDate).getTime(), "yyyyMMddHHmm")
         };
-        info(param).then(res=>{
-            this.setState({
-                payParam:res.payargs
-            },()=>{
-                if (typeof WeixinJSBridge == "undefined"){
-                    if( document.addEventListener ){
-                        document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false);
-                    }else if (document.attachEvent){
-                        document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady); 
-                        document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady);
-                    }
-                 }else{
-                    this.onBridgeReady();
-                 }
+        this.canClick=false;
+        if(this.canClick){
+            info(param).then(res=>{
+                this.setState({
+                    payParam:res.payargs
+                },()=>{
+                    this.canClick=true;
+                    if (typeof WeixinJSBridge == "undefined"){
+                        if( document.addEventListener ){
+                            document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false);
+                        }else if (document.attachEvent){
+                            document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady); 
+                            document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady);
+                        }
+                     }else{
+                        this.onBridgeReady();
+                     }
+                })
+            },(error)=>{
+                this.canClick=true;
+                if(error&&error.code==10020){
+                    Toast.fail("您输入的好友未注册，请提示好友注册！");
+                }else{
+                    error&&error.message&&Toast.fail(error.message);
+                }
             })
-        },(error)=>{
-            if(error&&error.code==10020){
-                Toast.fail("您输入的好友未注册，请提示好友注册！");
-            }else{
-                error&&error.message&&Toast.fail(error.message);
-            }
-        })
+        }
     }
 
     render() {
@@ -139,13 +148,26 @@ export default class App extends EntryBase {
                 <div className={style.mian} hidden={(!this.state.isHiddenTextArea)||(!this.state.isHiddenPic)}>
                     <h2 className={style.title}>选择发送对象 微信好友</h2>
                     <WhiteSpace/>
-                    <InputItem type="phone" 
-                        onChange={this.onChange}
-                        error={this.state.hasError}
-                        onErrorClick={this.onErrorClick}
-                        value={this.state.phone}
-                        clear placeholder="1** **** ****">手机号：</InputItem>
-                    <WhiteSpace size='lg'/>
+                    {
+                        this.state.phoneList.map((item,index)=>{
+                            return <PhoneInput key={item.id} index={index} phone={item.phone} changePhone={(phone)=>{
+                                let newList=this.state.phoneList;
+                                newList[index].phone=phone;
+                                this.setState({
+                                    phoneList:newList
+                                })
+                            }} delIndex={()=>{
+                                let newList=this.state.phoneList;
+                                newList.splice(index,1);
+                                this.setState({
+                                    phoneList:newList
+                                })
+                            }}/>
+                        })
+                    }
+                    <div className={style.addPhone} hidden={this.state.phoneList.length==10} onClick={this.addPhone}>
+                        <div className={style.addIcon}>+</div>添加发送人
+                    </div>
                     <Flex>
                         <Flex.Item>
                             <Button
@@ -185,26 +207,32 @@ export default class App extends EntryBase {
                     </Flex>
                     <WhiteSpace size='lg'/>
                     <DatePicker
+                        minDate={new Date()}
                         minuteStep={5}
                         value={this.state.sendDate}
                         onChange={sendDate => this.setState({sendDate})}>
                         <List.Item arrow="horizontal">设定发送时间</List.Item>
                     </DatePicker>
-                    {/* <WhiteSpace size='lg'/>
-                    <DatePicker
-                        minuteStep={5}
-                        value={this.state.sendDate}
-                        onChange={sendDate => this.setState({sendDate})}>
-                        <List.Item arrow="horizontal">设定取消提醒</List.Item>
-                    </DatePicker> */}
                     <WhiteSpace size='lg'/>
-                    <InputItem maxLength='6' value={this.state.firstpw}  onChange={firstpw => this.setState({firstpw})} type="password" placeholder="****">密码</InputItem>
+                    <InputItem maxLength='6' value={this.state.firstpw}  onChange={firstpw => this.setState({firstpw})} type="password" placeholder="****">设置取消密码</InputItem>
                     <WhiteSpace size='lg'/>
-                    <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({secondpw})} type="password" placeholder="****">再次输入密码</InputItem>
+                    <div>输入错误密码，系统自动发送，不可逆</div>
                     <WhiteSpace size='lg'/>
-                    <div>密码输错一次视为立即发送</div>
+                    <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({secondpw})} type="password" placeholder="****">再次确认密码</InputItem>
                     <WhiteSpace size='lg'/>
-                    <Button type="primary" onClick={this.sendInfo}>所有资料准备完毕，确认上传</Button>
+                    <AgreeItem onChange={e => {
+                        this.setState({
+                            hasQuestion:e.target.checked
+                        })
+                    }}>
+                        是否要添加找回取消密码自定义问题
+                    </AgreeItem>
+                    <div hidden={!this.state.hasQuestion}>
+                        <InputItem  placeholder="请输入自定义问题？" maxLength={25}>自定义问题</InputItem>
+                        <InputItem  placeholder="请输入问题答案？" maxLength={10}>自定义答案</InputItem>
+                    </div>
+                    <WhiteSpace size='lg'/>
+                    <Button disabled={this.canClick} type="primary" onClick={this.sendInfo}>所有资料准备完毕，确认上传</Button>
                 </div>
                 <Modal
                     visible={this.state.modal1}
