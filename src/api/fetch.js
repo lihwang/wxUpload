@@ -3,12 +3,17 @@ import config from 'commons/config';
 import qs from "qs";
 import {Toast} from 'antd-mobile';
 import util from "commons/util";
-import Jsrsasign from "jsrsasign";
+const cryptoB = require("crypto-browserify");
 
-// 实例化rsa
-var rsa=new Jsrsasign.RSAKey();
-// 选择哪种hash算法（散列生成一个报文摘要，目的是防篡改）
-var hashAlg="sha1";
+function signStr(data){
+    var arr = [];
+    for(let keyX in data){
+      if (typeof(data[keyX]) !== 'object'){
+        arr.push(keyX + "=" + data[keyX]);
+      };
+    };
+    return arr.sort().join("&");
+  };
 
 
 // 请求超时
@@ -35,22 +40,7 @@ const _fetch = axios.create({
     }
 })
 
-let privateKey = `-----BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQDSxwGtpKB7iKb3AY3bvKMN0AzBKu7WFDFzUurtBsJSUyBfj5+U
-Lo19WqJ620leBd52U1UpbaD0kc0Ppy8NVb9TvQjSOS2Shu9UMAs57IuGyPpZ7v3M
-BkIIhtGoXQQa0YKBaPehtdtZ5G/B3h5qr6toktgcwYudlWuSwuVRJLMsKQIDAQAB
-AoGAEZrxtvFDPk5Bs+v7T1lIPUUda50MafEx2DIa0UV5QasTzyeN6rCgvNGvNJfQ
-XvwagsOfH2C6yvLKr/4E3hZFbrAx7zq0chrqSH54GVRA6ATFNbIOj4xfvaJzk5oR
-PFG/fUc01sgDIdj3tGSH23L3SSn1asH1gaidnYSkSrfsyKECQQDWAY6RyqRPB9Ve
-vHfeqYpeVRRS7bVHXc2MsJpWajmkx5Km/vUtpfWj0SAsbowLhwIu26l+tn4lWVzu
-4YwtrlPlAkEA/CNB8LtICj3yk4xP7WpwIdHFmN7orwYutxpRYuEKSIS6oJMY/Zi6
-8/GIJgfKrh2o1ZoFG7ksnscww++Ynr869QJBAK+GvWH03El5+lbmrEaztirjC3Vt
-RMdRN7uSSjRgkgEGM9HGwl/7g/smFoZ68WCvDmpSfrXQhqypnCDOXARHvMUCQEk4
-k/Ws7YbL5p4iqTNxLY8ktBVo5nmtefOCmQ/1+l6E7Q2kqiU7LU+aXMdui9V0l4sw
-Zztd0y9o+ShtdAzly+ECQBM5CzKWPfKTqcwZ2el72LjVVFxVN3WdrnrkyGCXiTLq
-At9mgUC0H+2UdNPfNAfhfVrlF5kfqj/LKTbKtbwgy14=
------END RSA PRIVATE KEY-----`;
-
+let privateKey ="-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQDSxwGtpKB7iKb3AY3bvKMN0AzBKu7WFDFzUurtBsJSUyBfj5+U\nLo19WqJ620leBd52U1UpbaD0kc0Ppy8NVb9TvQjSOS2Shu9UMAs57IuGyPpZ7v3M\nBkIIhtGoXQQa0YKBaPehtdtZ5G/B3h5qr6toktgcwYudlWuSwuVRJLMsKQIDAQAB\nAoGAEZrxtvFDPk5Bs+v7T1lIPUUda50MafEx2DIa0UV5QasTzyeN6rCgvNGvNJfQ\nXvwagsOfH2C6yvLKr/4E3hZFbrAx7zq0chrqSH54GVRA6ATFNbIOj4xfvaJzk5oR\nPFG/fUc01sgDIdj3tGSH23L3SSn1asH1gaidnYSkSrfsyKECQQDWAY6RyqRPB9Ve\nvHfeqYpeVRRS7bVHXc2MsJpWajmkx5Km/vUtpfWj0SAsbowLhwIu26l+tn4lWVzu\n4YwtrlPlAkEA/CNB8LtICj3yk4xP7WpwIdHFmN7orwYutxpRYuEKSIS6oJMY/Zi6\n8/GIJgfKrh2o1ZoFG7ksnscww++Ynr869QJBAK+GvWH03El5+lbmrEaztirjC3Vt\nRMdRN7uSSjRgkgEGM9HGwl/7g/smFoZ68WCvDmpSfrXQhqypnCDOXARHvMUCQEk4\nk/Ws7YbL5p4iqTNxLY8ktBVo5nmtefOCmQ/1+l6E7Q2kqiU7LU+aXMdui9V0l4sw\nZztd0y9o+ShtdAzly+ECQBM5CzKWPfKTqcwZ2el72LjVVFxVN3WdrnrkyGCXiTLq\nAt9mgUC0H+2UdNPfNAfhfVrlF5kfqj/LKTbKtbwgy14=\n-----END RSA PRIVATE KEY-----"
 
 // 请求拦截器
 _fetch.interceptors.request.use(function (config) {
@@ -63,12 +53,15 @@ _fetch.interceptors.request.use(function (config) {
     }
     
     config.data = Object.assign({ timestamp: Date.parse(new Date())/1000,caller:'apiUser@wxapp.linkmsg.net',orderNo:util.randomString()}, config.data);
-    rsa=Jsrsasign.KEYUTIL.getKey(privateKey);
-    let sign=rsa.signString(util.sort_ASCII(config.data),hashAlg);
-    sign=Jsrsasign.hex2b64(sign);
+    config.data=util.sort_ASCII(config.data);
+    let type = 'RSA-SHA1';
+    let str = signStr(config.data);
+    let sign = cryptoB.createSign(type).update(str);
+    let sig = sign.sign(privateKey, 'base64');
+    console.log(sig)
     // get传参
     if (config.method == "get" && config.data) {
-        config.url += `?${util.formatQuery({...config.data,sign})}`
+        config.url += `?${util.formatQuery({...config.data,sign:sig})}`
     }
 
     config.data ={...config.data,sign};
