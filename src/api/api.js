@@ -36,6 +36,36 @@ export function register(data) {
 }
 
 /**
+ * 登陆查询
+ * @param {String} tokenUser openid 用户的token
+ * 
+ */
+export function checkLogin(data) {
+  return _fetch({
+    url: "/api/user/login",
+    method: "GET",
+    data: data,
+    headers: {}
+  });
+}
+
+/**
+ * 登陆请求
+ * @param {String} openid openid 用户授权后返回openId
+ */
+export function login(data) {
+  return _fetch({
+    url: "/api/user/login",
+    method: "PUT",
+    data: data,
+    headers: {}
+  });
+}
+
+
+
+
+/**
  * 用户oauth2授权验证（获取授权页面）
  */
 export function oauth2(data) {
