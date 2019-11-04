@@ -2,7 +2,7 @@ import 'babel-polyfill';// 全局垫片
 import React from 'react';
 // window.Promise = Promise;// 全局Promise
 import util from "commons/util";
-import {oauth2,queryUser,checkLogin } from "api/api";
+import {oauth2,queryUser,checkLogin ,login} from "api/api";
 
 /**
  * ES6 有一个特别规定，就是通过super调用父类的方法时，super会绑定子类的this。
@@ -20,6 +20,10 @@ class EntryBase extends React.Component {
 
 	}
 
+	login(){
+		// login()
+	}
+
 	componentDidMount(){
 		let dataList={
             caller:'apiUser@wxapp.linkmsg.net',
@@ -27,18 +31,19 @@ class EntryBase extends React.Component {
             sign:'abc'
 		}
 		let params = util.parseUrl(location.href).params;
-		if (!openId) {
-			localStorage.setItem('openId', params.openid);
-		}
-
 		let openId=localStorage.getItem('openId');
+		
+		if (!openId) {
+			localStorage.setItem('openId', params.openid||'');
+		}
 		let tokenUser=localStorage.getItem("tokenUser")
 		if(!openId||!util.isWeixin()){
 			window.location.href='http://weixin.linkmsg.net/web/oauth2/openId'+`?${util.formatQuery(util.sort_ASCII(dataList))}`;
 		}else{
-			checkLogin({tokenUser:tokenUser}).then(()=>{
-
+			login({openid:openId}).then((data)=>{
+				console.log(data)
 			})
+
 		}
 
 		// checkLogin()

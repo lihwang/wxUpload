@@ -1,9 +1,19 @@
 import axios from 'axios';
 import config from 'commons/config';
 import qs from "qs";
-import {Toast} from 'antd-mobile';
+import { Toast } from 'antd-mobile';
 import util from "commons/util";
-import crypto from "crypto-browserify";
+const cryptoB = require("crypto-browserify");
+
+function signStr(data) {
+    var arr = [];
+    for (let keyX in data) {
+        if (typeof (data[keyX]) !== 'object') {
+            arr.push(keyX + "=" + data[keyX]);
+        };
+    };
+    return arr.sort().join("&");
+};
 
 
 // 请求超时
@@ -17,7 +27,7 @@ let fetchLock = true;
 const _fetch = axios.create({
     //TODO:修改
     // baseURL: config.public.rpcPath.h5, 
-    baseURL: `http://weixin.linkmsg.net`, 
+    baseURL: `http://weixin.linkmsg.net`,
 
     // 超时
     timeout: TIMEOUT,
@@ -26,42 +36,12 @@ const _fetch = axios.create({
     // withCredentials: true,
 
     headers: {
-      
+
     }
 })
 
-let privateKey = `-----BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQDSxwGtpKB7iKb3AY3bvKMN0AzBKu7WFDFzUurtBsJSUyBfj5+U
-Lo19WqJ620leBd52U1UpbaD0kc0Ppy8NVb9TvQjSOS2Shu9UMAs57IuGyPpZ7v3M
-BkIIhtGoXQQa0YKBaPehtdtZ5G/B3h5qr6toktgcwYudlWuSwuVRJLMsKQIDAQAB
-AoGAEZrxtvFDPk5Bs+v7T1lIPUUda50MafEx2DIa0UV5QasTzyeN6rCgvNGvNJfQ
-XvwagsOfH2C6yvLKr/4E3hZFbrAx7zq0chrqSH54GVRA6ATFNbIOj4xfvaJzk5oR
-PFG/fUc01sgDIdj3tGSH23L3SSn1asH1gaidnYSkSrfsyKECQQDWAY6RyqRPB9Ve
-vHfeqYpeVRRS7bVHXc2MsJpWajmkx5Km/vUtpfWj0SAsbowLhwIu26l+tn4lWVzu
-4YwtrlPlAkEA/CNB8LtICj3yk4xP7WpwIdHFmN7orwYutxpRYuEKSIS6oJMY/Zi6
-8/GIJgfKrh2o1ZoFG7ksnscww++Ynr869QJBAK+GvWH03El5+lbmrEaztirjC3Vt
-RMdRN7uSSjRgkgEGM9HGwl/7g/smFoZ68WCvDmpSfrXQhqypnCDOXARHvMUCQEk4
-k/Ws7YbL5p4iqTNxLY8ktBVo5nmtefOCmQ/1+l6E7Q2kqiU7LU+aXMdui9V0l4sw
-Zztd0y9o+ShtdAzly+ECQBM5CzKWPfKTqcwZ2el72LjVVFxVN3WdrnrkyGCXiTLq
-At9mgUC0H+2UdNPfNAfhfVrlF5kfqj/LKTbKtbwgy14=
------END RSA PRIVATE KEY-----`;
-let algorithm = 'sha1';
-function apiSign(algorithm, privateKey, data){
-    let sign = crypto.createSign(algorithm);
-    // let str = signStr(data);
-    sign.update(data);
-    let sig = sign.sign(privateKey, 'base64');
-    return sig;
-  };
-// function signStr(data){
-// var arr = [];
-// for(let key in data){
-//     if (typeof(data[key]) !== 'object'){
-//     arr.push(key + "=" + data[key]);
-//     };
-// };
-// return arr.sort().join("&");
-// };
+let privateKey = "-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQDSxwGtpKB7iKb3AY3bvKMN0AzBKu7WFDFzUurtBsJSUyBfj5+U\nLo19WqJ620leBd52U1UpbaD0kc0Ppy8NVb9TvQjSOS2Shu9UMAs57IuGyPpZ7v3M\nBkIIhtGoXQQa0YKBaPehtdtZ5G/B3h5qr6toktgcwYudlWuSwuVRJLMsKQIDAQAB\nAoGAEZrxtvFDPk5Bs+v7T1lIPUUda50MafEx2DIa0UV5QasTzyeN6rCgvNGvNJfQ\nXvwagsOfH2C6yvLKr/4E3hZFbrAx7zq0chrqSH54GVRA6ATFNbIOj4xfvaJzk5oR\nPFG/fUc01sgDIdj3tGSH23L3SSn1asH1gaidnYSkSrfsyKECQQDWAY6RyqRPB9Ve\nvHfeqYpeVRRS7bVHXc2MsJpWajmkx5Km/vUtpfWj0SAsbowLhwIu26l+tn4lWVzu\n4YwtrlPlAkEA/CNB8LtICj3yk4xP7WpwIdHFmN7orwYutxpRYuEKSIS6oJMY/Zi6\n8/GIJgfKrh2o1ZoFG7ksnscww++Ynr869QJBAK+GvWH03El5+lbmrEaztirjC3Vt\nRMdRN7uSSjRgkgEGM9HGwl/7g/smFoZ68WCvDmpSfrXQhqypnCDOXARHvMUCQEk4\nk/Ws7YbL5p4iqTNxLY8ktBVo5nmtefOCmQ/1+l6E7Q2kqiU7LU+aXMdui9V0l4sw\nZztd0y9o+ShtdAzly+ECQBM5CzKWPfKTqcwZ2el72LjVVFxVN3WdrnrkyGCXiTLq\nAt9mgUC0H+2UdNPfNAfhfVrlF5kfqj/LKTbKtbwgy14=\n-----END RSA PRIVATE KEY-----"
+
 // 请求拦截器
 _fetch.interceptors.request.use(function (config) {
     // REST风格接口
@@ -71,17 +51,20 @@ _fetch.interceptors.request.use(function (config) {
             delete config.data[key];
         }
     }
-    
-    config.data = Object.assign({ timestamp: Date.parse(new Date())/1000,caller:'apiUser@wxapp.linkmsg.net',orderNo:util.randomString()}, config.data);
-    // console.log(algorithm,privateKey,util.jsonURLParams(config.data))
-    // let sign=apiSign(algorithm,privateKey,util.jsonURLParams(config.data));
-    // console.log(sign)
-    let sign=1;
+
+    config.data = Object.assign({ timestamp: Date.parse(new Date()) / 1000, caller: 'apiUser@wxapp.linkmsg.net', orderNo: util.randomString() }, config.data);
+    config.data = util.sort_ASCII(config.data);
+    let type = 'RSA-SHA1';
+    let str = signStr(config.data);
+    let sign = cryptoB.createSign(type).update(str);
+    let sig = sign.sign(privateKey, 'base64');
+    console.log(sig)
+    // get传参
     if (config.method == "get" && config.data) {
-        config.url += `?${util.formatQuery({...config.data,sign})}`
+        config.url += `?${util.formatQuery({ ...config.data, sign: sig })}`
     }
 
-    config.data ={...config.data,sign};
+    config.data = { ...config.data, sign: sig };
 
 
     // 请求锁, 
@@ -129,9 +112,9 @@ _fetch.interceptors.response.use(function (res) {
 
         showToast = false;
         //如果是请求用户信息
-        if (res.config.url.indexOf("/api/user") >= 0&&code == 10020) {
+        if (res.config.url.includes("/user/login") && code == 10019 && !location.href.includes('login.html')) {
             // 不提示错误信息
-            location.href='login.html';
+            location.href = 'login.html';
         }
 
         // 结束上一个toast
@@ -139,7 +122,7 @@ _fetch.interceptors.response.use(function (res) {
 
         // 打印错误信息
         !!showToast && Toast.info(data.message, 2);
-        console.log('error',data)
+        console.log('error', data)
         return Promise.reject(data);
     }
 }, function (error) {
