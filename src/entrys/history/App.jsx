@@ -92,9 +92,9 @@ export default class App extends EntryBase {
     getRecords(){
         let param={
             type: "1",
-            userId:util.getCookie("userId"),
             size: 10,
-            offset: this.state.offset
+            offset: this.state.offset,
+            tokenUser: localStorage.getItem('tokenUser'),
         }
         infoList(param).then(data=>{
             this.setState({

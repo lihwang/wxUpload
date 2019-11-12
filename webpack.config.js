@@ -27,10 +27,7 @@ let config = webpackCfg.getConfig({
   env: process.env.NODE_ENV === 'development' ? "dev" : process.env.GULP_ENV,
   // 需要提取的公共依赖
   extractBundle: {
-    commonBundle: [
-      'commons/base', 'commons/util', 'commons/device', 'commons/config'
-    ],
-    reactBundle: ['react', 'react-dom'],
+
   },
   // 后端接口路径
   rpcPath: {

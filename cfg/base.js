@@ -133,7 +133,32 @@ let getConfig = () => {
         module: {
             rules: getLoaders().concat(baseOption.loaders)
         },
-        plugins: getPlugins()
+        plugins: getPlugins(),
+        optimization: {
+            runtimeChunk: {//老版本未更改hash变化解决
+                name: 'runtime'
+            },
+            usedExports: true,//要做排除的去sideEffects设置
+            splitChunks: {
+                chunks: "all",//异步同步全部
+                automaticNameDelimiter: '~',
+                automaticNameMaxLength: 2,
+                name: true,
+                cacheGroups: {//满足后分割位置 
+                    vendors: {
+                        test: /[\\/]node_modules[\\/]/,
+                        priority: -10, //都符合和情况默认放到的优先级里
+                        name: 'vendors'
+                    },
+                    default: {
+                        minChunks: 2,
+                        priority: -20,
+                        reuseExistingChunk: true,
+                        name: 'default'
+                      }
+                }
+            }
+        },
     }
 }
 

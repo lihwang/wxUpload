@@ -25,6 +25,7 @@ class EntryBase extends React.Component {
 	}
 
 	componentDidMount(){
+		
 		let dataList={
             caller:'apiUser@wxapp.linkmsg.net',
             orderNo:util.randomString(),

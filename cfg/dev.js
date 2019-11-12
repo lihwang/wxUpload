@@ -91,7 +91,8 @@ let getConfig = () => {
       disableHostCheck: true,
       port: 8000,
       host: "0.0.0.0",
-      proxy: devServerProxy
+      proxy: devServerProxy,
+      stats: { warningsFilter: (warning) => /Conflicting order between/gm.test(warning) },
     }, baseOption.dev.devServer || {}),
     performance: {
       hints: false
