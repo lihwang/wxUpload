@@ -36,12 +36,16 @@ class EntryBase extends React.Component {
 		if (!openId) {
 			localStorage.setItem('openId', params.openid||'');
 		}
-		let tokenUser=localStorage.getItem("tokenUser")
+		// let tokenUser=localStorage.getItem("tokenUser")
 		if(!openId||!util.isWeixin()){
 			window.location.href='http://weixin.linkmsg.net/web/oauth2/openId'+`?${util.formatQuery(util.sort_ASCII(dataList))}`;
 		}else{
 			login({openid:openId}).then((data)=>{
-				console.log(data)
+				if(location.href.includes('login.html')){
+					location.href="index.html";
+				}else{
+					localStorage.setItem('tokenUser', data.tokenUser||'');
+				}
 			})
 
 		}

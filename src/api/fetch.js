@@ -116,6 +116,14 @@ _fetch.interceptors.response.use(function (res) {
             // 不提示错误信息
             location.href = 'login.html';
         }
+        if (code == 10021) {
+            let dataList = {
+                caller: 'apiUser@wxapp.linkmsg.net',
+                orderNo: util.randomString(),
+                sign: 'abc'
+            }
+            window.location.href = 'http://weixin.linkmsg.net/web/oauth2/openId' + `?${util.formatQuery(util.sort_ASCII(dataList))}`;
+        }
 
         // 结束上一个toast
         Toast.hide();

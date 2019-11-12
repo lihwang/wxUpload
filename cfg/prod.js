@@ -36,7 +36,7 @@ let getConfig = () => {
         performance: {
             hints: false
         },
-        devtool: process.env.GULP_ENV == "prod" ? 'cheap-module-source-map' : 'source-map',
+        devtool: process.env.GULP_ENV == "prod" ? '' : 'source-map',
         plugins: [
             new webpack.DefinePlugin(settings.getDefinePluginParam({
                 defineEnv: process.env.GULP_ENV,

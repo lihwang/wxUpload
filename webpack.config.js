@@ -138,5 +138,7 @@ let config = webpackCfg.getConfig({
   // script加跨域头
   alterAssetTags: false
 })
+console.log(config)
+debugger
 // 导出配置
 module.exports = config;
