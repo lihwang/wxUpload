@@ -31,11 +31,12 @@ export default class App extends EntryBase {
         super.componentDidMount();
         let param = {
             serialNo: util.parseUrl(location.href).params.serialNo,
-            userId: util.getCookie("userId"),
+            tokenUser: localStorage.getItem('tokenUser'),
+            type:"1"
         };
         infoGet(param).then(data=>{
             var ossParam = {
-                userId: util.getCookie("userId"),
+                tokenUser: localStorage.getItem('tokenUser'),
                 ossId: data.picId
             };
             this.setState({

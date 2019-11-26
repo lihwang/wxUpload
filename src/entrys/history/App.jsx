@@ -41,7 +41,6 @@ export default class App extends EntryBase {
         let bT = window.scrollY;// body滚动距离
         let bH = document.body.clientHeight;// body内容高度
         let wH = window.innerHeight;// 可视区域高
-        console.log(bT, wH , bH)
         if (bT + wH + 2 >= bH) { //到达底部时,加载新内容
             this.onEndReached();
         }
@@ -122,7 +121,7 @@ export default class App extends EntryBase {
                                         remove: "1",
                                         status: "4",
                                         serialNo: item.serialNo,
-                                        userId: util.getCookie("userId")
+                                        tokenUser: localStorage.getItem('tokenUser'),
                                     };
                                     infoPut(param).then(data=>{
                                         Toast.success('删除成功');

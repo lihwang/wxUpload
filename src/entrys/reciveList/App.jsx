@@ -31,7 +31,6 @@ export default class App extends EntryBase {
         let bT = window.scrollY;// body滚动距离
         let bH = document.body.clientHeight;// body内容高度
         let wH = window.innerHeight;// 可视区域高
-        console.log(bT, wH , bH)
         if (bT + wH + 2 >= bH) { //到达底部时,加载新内容
             this.onEndReached();
         }
@@ -90,7 +89,8 @@ export default class App extends EntryBase {
             type: "2",
             toUserId:util.getCookie("userId"),
             size: 10,
-            offset: this.state.offset
+            offset: this.state.offset,
+            tokenUser: localStorage.getItem('tokenUser'),
         }
         infoList(param).then(data=>{
             this.setState({

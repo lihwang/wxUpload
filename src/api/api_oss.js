@@ -37,3 +37,16 @@ export function ossGet(data) {
     headers: {}
   });
 }
+
+/**
+ * 信息数据的保存 
+ */
+export function depositPost(data) {
+  return _fetch({
+    url: "/api/deposit",
+    method: "POST",
+    data: data,
+    headers: {}
+  });
+}
+
