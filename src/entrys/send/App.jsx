@@ -48,6 +48,7 @@ export default class App extends EntryBase {
     }
 
     onBridgeReady = () => {
+        this.canClick = true;
         WeixinJSBridge.invoke(
             'getBrandWCPayRequest', {
             "appId": this.state.payParam.appId,     //公众号名称，由商户传入     
@@ -117,7 +118,7 @@ export default class App extends EntryBase {
             tokenUser: localStorage.getItem('tokenUser'),
             picId: this.state.picId,
             vedioId: this.state.vedioId,
-            planTime: util.msecToString(new Date(this.state.sendDate).getTime(), "yyyyMMddHHmm"),
+            planTime: util.msecToString(new Date(this.state.sendDate).getTime(), "yyyyMMddHHmmss"),
             passwdAsk:question,
             passwdReply:answer
         };
@@ -128,7 +129,6 @@ export default class App extends EntryBase {
                 this.setState({
                     payParam: res.payargs
                 }, () => {
-                    this.canClick = true;
                     if (typeof WeixinJSBridge == "undefined") {
                         if (document.addEventListener) {
                             document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false);
@@ -224,7 +224,7 @@ export default class App extends EntryBase {
                 <WhiteSpace size='lg' />
                 <InputItem maxLength='6' value={this.state.firstpw} onChange={firstpw => this.setState({ firstpw })} type="password" placeholder="****">设置取消密码</InputItem>
                 <WhiteSpace size='lg' />
-                <div>输入错误密码，系统自动发送，不可逆</div>
+                <div className={style.passWordTips}>发送时间到达前，可凭此密码取消发送，密码输入错误，会导致系统立刻发送！只有一次机会！！不可逆！！！敬请牢记！！！如需长期保存建议</div>
                 <WhiteSpace size='lg' />
                 <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({ secondpw })} type="password" placeholder="****">再次确认密码</InputItem>
                 <WhiteSpace size='lg' />
@@ -252,7 +252,7 @@ export default class App extends EntryBase {
                 <WhiteSpace size='lg' />
                 <Button disabled={!this.canClick} type="primary" onClick={this.sendInfo}>所有资料准备完毕，确认上传</Button>
             </div>
-            <Modal
+            {/* <Modal
                 visible={this.state.modal1}
                 transparent
                 maskClosable={false}
@@ -265,7 +265,7 @@ export default class App extends EntryBase {
                     时间：**年**月**日**点**分<br />
                     将按照您设定的时间发送
                     </div>
-            </Modal>
+            </Modal> */}
             <List hidden={this.state.isHiddenTextArea} renderHeader={() => '请输入文字资料'}>
                 <TextareaItem
                     placeholder='请输入内容'

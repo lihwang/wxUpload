@@ -3,17 +3,19 @@
  */
 import React from 'react';
 import EntryBase from '../Common/EntryBase';
-import { Button,Modal,List,Toast,Icon} from 'antd-mobile';
+import { Button, Modal, List, Toast, Icon ,InputItem} from 'antd-mobile';
 import style from './styles/App.less';
+import classnames from 'classnames'
 import util from "commons/util";
 const alert = Modal.alert;
-import {infoList ,infoPut} from "api/api";
+import { infoList, infoPut } from "api/api";
 
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
             modal1: false,
+            orderNo:'',
             historyList: [],
             // 正在加载
             isLoading: false,
@@ -26,8 +28,8 @@ export default class App extends EntryBase {
             offset: 0
         }
     }
-            // 滚动
-    onScroll=()=> {
+    // 滚动
+    onScroll = () => {
         let bT = window.scrollY;// body滚动距离
         let bH = document.body.clientHeight;// body内容高度
         let wH = window.innerHeight;// 可视区域高
@@ -37,7 +39,7 @@ export default class App extends EntryBase {
     }
 
 
-    onEndReached=()=> {
+    onEndReached = () => {
         if (this.state.isLoading || this.state.noMoreResource) {
             return;
         }
@@ -57,21 +59,21 @@ export default class App extends EntryBase {
         this.setState({
             isLoading: false
         });
-    
+
         if (backDatas.length < 10) {
             this.setState({
-            noMoreResource: true
+                noMoreResource: true
             })
         } else {
             this.setState({
-            noMoreResource: false
+                noMoreResource: false
             })
         }
     }
 
-    onClose(key){
+    onClose(key) {
         this.setState({
-        [key]: false,
+            [key]: false,
         });
     }
 
@@ -84,71 +86,84 @@ export default class App extends EntryBase {
         document.removeEventListener('scroll', this.onScroll);//移除监听滚动
     }
 
-    getRecords(){
-        let param={
+    getRecords() {
+        let param = {
             type: "2",
-            toUserId:util.getCookie("userId"),
+            toUserId: util.getCookie("userId"),
             size: 10,
             offset: this.state.offset,
             tokenUser: localStorage.getItem('tokenUser'),
         }
-        infoList(param).then(data=>{
+        infoList(param).then(data => {
             this.setState({
-                historyList:[...this.state.historyList,...data.records]
-            },()=>{
+                historyList: [...this.state.historyList, ...data.records]
+            }, () => {
                 this.httpCallBack(data.records)
             })
         })
     }
-  
+
     render() {
         return (
             <div className={style.container}>
-              <h2 className={style.title}>接收资料目录（按时间顺序）</h2>
-              <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
-                  {
-                      this.state.historyList.length ? this.state.historyList.map((item,index)=>{
-                        return <List.Item key={index}
-                            extra={<Button type="warning" size="small" inline onClick={()=>{
-                            alert('提示', '是否确认删除该数据？', [
-                                { text: '取消'},
-                                { text: '确认', onPress: () =>{
-                                    var param = {
-                                        type: "2",
-                                        remove: "1",
-                                        status: "4",
-                                        serialNo: item.serialNo,
-                                        userId: util.getCookie("userId")
-                                    };
-                                    infoPut(param).then(data=>{
-                                        Toast.success('删除成功');
-                                        let historyList=this.state.historyList;
-                                        historyList.splice(index,1);
-                                        this.setState({
-                                            historyList:historyList
-                                        })
-                                    })
-                                }},
-                              ])
-                        }}>删除</Button>}
-                        multipleLine
-                        >
-                        <Button style={{marginRight:'10px',verticalAlign: 'top',marginTop:'20px'}} onClick={()=>{
-                            window.location.href='recive.html'
-                        }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
-                            window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
-                        }}>查看</Button>
-                            <div style={{fontSize: 28,display:'inline-block'}}>
-                                <span>{item.createTime}</span><br/>
-                                <span>序列号:{item.serialNo}</span>
+                <h2 className={style.title}>接收资料目录（按时间顺序）</h2>
+                <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
+                    {/* <List.Item>
+                        <InputItem type="number"
+                            className={classnames(style.phone)}
+                            onChange={(orderNo)=>{
+                                this.setState({
+                                    orderNo
+                                })
+                            }}
+                            value={this.state.orderNo}
+                            clear placeholder="请输入需要查询的序列号">序列号：</InputItem>
+                    </List.Item> */}
+                    {
+                        this.state.historyList.length ? this.state.historyList.map((item, index) => {
+                            return <List.Item key={index}
+                                extra={<Button type="warning" size="small" inline onClick={() => {
+                                    alert('提示', '是否确认删除该数据？', [
+                                        { text: '取消' },
+                                        {
+                                            text: '确认', onPress: () => {
+                                                var param = {
+                                                    type: "2",
+                                                    remove: "1",
+                                                    status: "4",
+                                                    serialNo: item.serialNo,
+                                                    userId: util.getCookie("userId")
+                                                };
+                                                infoPut(param).then(data => {
+                                                    Toast.success('删除成功');
+                                                    let historyList = this.state.historyList;
+                                                    historyList.splice(index, 1);
+                                                    this.setState({
+                                                        historyList: historyList
+                                                    })
+                                                })
+                                            }
+                                        },
+                                    ])
+                                }}>删除</Button>}
+                                multipleLine
+                            >
+                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }} onClick={() => {
+                                    window.location.href = 'recive.html'
+                                }} className={style.x_left} type="ghost" size="small" inline onClick={() => {
+                                    window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
+                                }}>查看</Button>
+                                <div style={{ fontSize: 28, display: 'inline-block' }}>
+                                    <span>{item.createTime}</span><br />
+                                    <span>序列号:{item.serialNo}</span>
+                                </div>
+                            </List.Item>
+                        }) : <div style={{ textAlign: 'center', padding: 30 }}>
+                                <div><Icon type="cross-circle" size="large" /></div>
+                                <div>暂无数据</div>
                             </div>
-                        </List.Item>
-                      }):<div style={{textAlign:'center',padding:30}}>
-                          <div><Icon type="cross-circle" size="large" /></div>
-                            <div>暂无数据</div>
-                        </div>
-                  }
-            </List>
+                    }
+                </List>
             </div>
         )
     }

@@ -7,7 +7,7 @@ import { Button,Modal,List,Toast,Icon} from 'antd-mobile';
 import style from './styles/App.less';
 import util from "commons/util";
 const alert = Modal.alert;
-import {infoList ,infoPut} from "api/api";
+import {infoList ,infoPut,payGet} from "api/api";
 let status={
     3:'待发送',
     1:'发送成功'
@@ -91,6 +91,7 @@ export default class App extends EntryBase {
     getRecords(){
         let param={
             type: "1",
+            status:0,
             size: 10,
             offset: this.state.offset,
             tokenUser: localStorage.getItem('tokenUser'),
@@ -103,16 +104,39 @@ export default class App extends EntryBase {
             })
         })
     }
+
+    onBridgeReady  = () => {
+        let { payParam } = this.state;
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest', {
+            "appId": payParam.appId,     //公众号名称，由商户传入     
+            "timeStamp": payParam.timeStamp,         //时间戳，自1970年以来的秒数     
+            "nonceStr": payParam.nonceStr, //随机串     
+            "package": payParam.package,
+            "signType": payParam.signType,         //微信签名方式：     
+            "paySign": payParam.paySign,//微信签名 
+        },
+            function (res) {
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    Toast.success("信息支付成功，消息会在指定时间发出！", 3000);
+                    setTimeout(() => {
+                        location.href = 'index.html';
+                    }, 3000)
+                } else {
+                    location.href = "index.html";
+                }
+            });
+    }
   
     render() {
         return (
             <div className={style.container}>
-              <h2 className={style.title}>保存资料目录（按时间顺序）</h2>
+              <h2 className={style.title}>未完成发送操作（按时间顺序）</h2>
               <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
                   {
                       this.state.historyList.length ? this.state.historyList.map((item,index)=>{
                         return <List.Item key={index}
-                            extra={item.status!=0?<Button type="warning" size="small" style={{verticalAlign: 'sub'}} inline  onClick={()=>{
+                            extra={<Button type="warning" size="small" style={{verticalAlign: 'sub'}} inline  onClick={()=>{
                             alert('提示', '是否确认删除该数据？', [
                                 { text: '取消'},
                                 { text: '确认', onPress: () =>{
@@ -133,15 +157,39 @@ export default class App extends EntryBase {
                                     })
                                 }},
                               ])
-                        }}>删除</Button>:''}
+                        }}>删除</Button>}
                         multipleLine
                         >
                         <Button style={{marginRight:'10px',verticalAlign: 'top',marginTop:'20px'}} onClick={()=>{
                             window.location.href='recive.html'
                         }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
-                            window.location.href = "recive.html?from=history&serialNo=" + item.serialNo
-                        }}>查看</Button>
-                            <div style={{fontSize: 28,display:'inline-block'}}>
+                            let param={
+                                payOrderNo:item.payOrderNo,
+                                tokenUser: localStorage.getItem('tokenUser'),
+                                type:'1',
+                            }
+
+                            payGet(param).then(data=>{
+                                let payParam=JSON.parse(data.records[0].payargs);
+                                this.setState({
+                                    payParam
+                                },()=>{
+                                    if (typeof WeixinJSBridge == "undefined") {
+                                        if (document.addEventListener) {
+                                            document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false);
+                                        } else if (document.attachEvent) {
+                                            document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady);
+                                            document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady);
+                                        }
+                                    } else {
+                                        this.onBridgeReady();
+                                    }
+                                })
+                            })
+                        }}>去支付</Button>
+                            <div style={{fontSize: 28,display:'inline-block'}} onClick={()=>{
+                            window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                        }}>
                                 <span>{item.createTime}{status[item.status]?(' | '+status[item.status]):''}</span><br/>
                                 <span>序列号:{item.serialNo}</span>
                             </div>

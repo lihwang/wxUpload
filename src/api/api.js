@@ -1,4 +1,5 @@
 import _fetch from "api/fetch";
+
 /**
  * 用户认证短信发送
  */
@@ -120,6 +121,58 @@ export function infoList(data) {
   });
 }
 
+//保存资料
+export function infoDeposit(data) {
+  return _fetch({
+    url: "/api/deposit",
+    method: "POST",
+    data: data,
+    headers: {}
+  });
+}
+
+//支付列表查询
+export function depositGet(data) {
+  return _fetch({
+    url: "/api/deposit",
+    method: "GET",
+    data: data,
+    headers: {}
+  });
+}
+
+
+
+
+//资料价格查询
+export function depositExtend(data) {
+  return _fetch({
+    url: "/api/deposit/extend",
+    method: "GET",
+    data: data,
+    headers: {}
+  });
+}
+
+//未支付查询支付参数
+export function payGet(data) {
+  return _fetch({
+    url: "/api/pay",
+    method: "GET",
+    data: data,
+    headers: {}
+  });
+}
+
+//未支付查询支付参数
+export function payUpdate(data) {
+  return _fetch({
+    url: "/api/deposit",
+    method: "PUT",
+    data: data,
+    headers: {}
+  });
+}
 
 
 

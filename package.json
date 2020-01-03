@@ -8,7 +8,8 @@
     "open": "cross-env NODE_ENV=development dev=true webpack-dev-server --open --hot --color",
     "build:test": "cross-env NODE_ENV=production dev=false GULP_ENV=test webpack --progress --hide-modules --color",
     "build:prod": "cross-env NODE_ENV=production dev=false GULP_ENV=prod webpack --progress --hide-modules --color",
-    "upload": "npm run build:prod && gulp upload"
+    "buildload": "npm run build:prod && gulp upload",
+    "upload": " gulp upload"
   },
   "deploy": {
     "cdn": "",
@@ -69,7 +70,7 @@
     "gulp-util": "^3.0.8",
     "html-loader": "^0.4.4",
     "html-webpack-event-plugin": "^0.1.1",
-    "html-webpack-plugin": "^4.0.0-beta.5",
+    "html-webpack-plugin": "4.0.0-beta.5",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.1",
