@@ -187,7 +187,7 @@ export default class App extends EntryBase {
                                 })
                             })
                         }}>去支付</Button>
-                            <div style={{fontSize: 28,display:'inline-block'}} onClick={()=>{
+                            <div style={{fontSize: 26,display:'inline-block'}} onClick={()=>{
                             window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
                         }}>
                                 <span>{item.createTime}{status[item.status]?(' | '+status[item.status]):''}</span><br/>

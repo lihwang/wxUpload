@@ -7,7 +7,7 @@ import EntryBase from '../Common/EntryBase';
 import { Button, Badge, Tabs, TextareaItem, List, WhiteSpace, InputItem, DatePicker, WingBlank, Modal, Toast } from 'antd-mobile';
 import util from "commons/util";
 import ImagePickerExample from '../send/ImagePickerExample'
-import { infoGet, infoPut, info, infoDeposit, depositExtend, payGet ,payUpdate} from "api/api";
+import { infoGet, infoPut, info, infoDeposit, depositExtend, payGet, payUpdate } from "api/api";
 import { ossGet } from 'api/api_oss'
 const alert = Modal.alert;
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
@@ -32,7 +32,7 @@ export default class App extends EntryBase {
             imgSrc: '',
             payPrice: 0,
             payParam: {},//支付参数
-            extendDay: 0
+            extendDay: ''
         }
         this.canClick = true;
     }
@@ -41,10 +41,10 @@ export default class App extends EntryBase {
     componentDidMount() {
         super.componentDidMount();
         this.infoGetFn();
-   
+
     }
 
-    infoGetFn(){
+    infoGetFn() {
         let param = {
             serialNo,
             tokenUser,
@@ -228,11 +228,11 @@ export default class App extends EntryBase {
                                     text: '确认', onPress: () => {
                                         let param = {
                                             tokenUser,
-                                            status:2,
+                                            status: 2,
                                             depositNo: attach.depositNo,
                                             serialNo,
                                         }
-                                        payUpdate(param).then(data=>{
+                                        payUpdate(param).then(data => {
                                             this.infoGetFn();
                                             Toast.success('取消支付订单成功！');
                                         })
@@ -296,10 +296,11 @@ export default class App extends EntryBase {
                         <List.Item arrow="horizontal">保存至</List.Item>
                     </DatePicker> */}
                     <InputItem type="number"
+                    placeholder="请输入保存天数"
                         max={365}
                         onChange={(e) => {
                             this.setState({
-                                extendDay: e ? (parseInt(e) > 365 ? 365 : parseInt(e)) : 0
+                                extendDay: e ? (parseInt(e) > 365 ? 365 : parseInt(e)) : ''
                             }, () => {
                                 if (this.state.extendDay) {
                                     let { orderNo, extendDay } = this.state.sendData;

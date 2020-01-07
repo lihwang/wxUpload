@@ -140,10 +140,12 @@ export default class App extends EntryBase {
                                 }}>删除</Button> : ''}
                                 multipleLine
                             >
-                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }}  onClick={() => {
+                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '15px' }}  onClick={() => {
                                     window.location.href = "recive.html?from=payList&serialNo=" + item.serialNo
                                 }} className={style.x_left} type="ghost" size="small" inline >续保</Button>
-                                <div style={{ fontSize: 28, display: 'inline-block' }}>
+                                <div style={{ fontSize: 26, display: 'inline-block' }} onClick={()=>{
+                                     window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                                }}>
                                     <span>到期时间：{JSON.parse(item.attach).expiresTime}</span><br />
                                     <span>序列号:{item.serialNo}{status[item.status] ? (' | ' + status[item.status]) : ''}</span>
                                 </div>

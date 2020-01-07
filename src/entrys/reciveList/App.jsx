@@ -165,12 +165,12 @@ export default class App extends EntryBase {
                                 }}>删除</Button>}
                                 multipleLine
                             >
-                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }} onClick={() => {
-                                    window.location.href = 'recive.html'
-                                }} className={style.x_left} type="ghost" size="small" inline onClick={() => {
+                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '15px' }}  className={style.x_left} type="ghost" size="small" inline onClick={() => {
                                     window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
                                 }}>查看</Button>
-                                <div style={{ fontSize: 28, display: 'inline-block' }}>
+                                <div style={{ fontSize: 26, display: 'inline-block' }} onClick={()=>{
+                                     window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                                }}>
                                     <span>{item.createTime}</span><br />
                                     <span>序列号:{item.serialNo}</span>
                                 </div>

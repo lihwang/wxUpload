@@ -132,7 +132,7 @@ export default class App extends EntryBase {
                                             location.reload();
                                         })
                                     }, 'secure-text', '', ['请输入取消密码'])
-                                }}>取消</Button>}
+                                }}>取消发送</Button>}
                                 multipleLine
                             >
                                 <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }}  className={style.x_left} type="ghost" size="small" inline onClick={() => {

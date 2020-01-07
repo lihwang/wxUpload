@@ -107,9 +107,9 @@ export default class App extends EntryBase {
         if (hasError) return Toast.fail("手机号格式错误");
 
         if (secondpw != firstpw) return Toast.fail("两次密码输入不一致！");
-        if (hasQuestion && (!answer||!question)) {
-            return Toast.fail("自定义问题和答案必填！");
-        }
+        // if (hasQuestion && (!answer||!question)) {
+        //     return Toast.fail("自定义问题和答案必填！");
+        // }
         var param = {
             mobile: phoneList.map(item=>item.phone.replace(/\s/g, '')).join(','),
             password: secondpw,
@@ -224,11 +224,12 @@ export default class App extends EntryBase {
                 <WhiteSpace size='lg' />
                 <InputItem maxLength='6' value={this.state.firstpw} onChange={firstpw => this.setState({ firstpw })} type="password" placeholder="****">设置取消密码</InputItem>
                 <WhiteSpace size='lg' />
-                <div className={style.passWordTips}>发送时间到达前，可凭此密码取消发送，密码输入错误，会导致系统立刻发送！只有一次机会！！不可逆！！！敬请牢记！！！如需长期保存建议</div>
-                <WhiteSpace size='lg' />
+               
                 <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({ secondpw })} type="password" placeholder="****">再次确认密码</InputItem>
                 <WhiteSpace size='lg' />
-                <AgreeItem onChange={e => {
+                <div className={style.passWordTips}>发送时间到达前，可凭此密码取消发送，密码输入错误，会导致系统立刻发送！只有一次机会！！不可逆！！！敬请牢记！！！如需长期保存建议</div>
+                <WhiteSpace size='lg' />
+                {/* <AgreeItem onChange={e => {
                     this.setState({
                         hasQuestion: e.target.checked
                     })
@@ -249,7 +250,7 @@ export default class App extends EntryBase {
                             })
                         }}>自定义答案</InputItem>
                 </div>
-                <WhiteSpace size='lg' />
+                <WhiteSpace size='lg' /> */}
                 <Button disabled={!this.canClick} type="primary" onClick={this.sendInfo}>所有资料准备完毕，确认上传</Button>
             </div>
             {/* <Modal
