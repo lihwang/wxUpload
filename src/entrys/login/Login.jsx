@@ -103,6 +103,7 @@ export default class App extends React.Component {
             password: '',
         }
         register(registerData).then(res => {
+            Toast.success('注册成功，即将前往首页！');
             location.href = 'index.html';
         }, err => {
             if (err.code == '10001') {

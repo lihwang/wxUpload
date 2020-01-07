@@ -135,9 +135,7 @@ export default class App extends EntryBase {
                                 }}>取消</Button>}
                                 multipleLine
                             >
-                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }} onClick={() => {
-                                    window.location.href = 'recive.html'
-                                }} className={style.x_left} type="ghost" size="small" inline onClick={() => {
+                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }}  className={style.x_left} type="ghost" size="small" inline onClick={() => {
                                     window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
                                 }}>查看</Button>
                                 <div style={{ fontSize: 28, display: 'inline-block' }}>

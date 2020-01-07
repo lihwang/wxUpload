@@ -3,19 +3,19 @@
  */
 import React from 'react';
 import EntryBase from '../Common/EntryBase';
-import { Button, Modal, List, Toast, Icon ,InputItem} from 'antd-mobile';
+import { Button, Modal, List, Toast, Icon, InputItem } from 'antd-mobile';
 import style from './styles/App.less';
 import classnames from 'classnames'
 import util from "commons/util";
 const alert = Modal.alert;
-import { infoList, infoPut } from "api/api";
+import { infoList, infoPut,infoGet } from "api/api";
 
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
             modal1: false,
-            orderNo:'',
+            serialNo: '',
             historyList: [],
             // 正在加载
             isLoading: false,
@@ -89,7 +89,6 @@ export default class App extends EntryBase {
     getRecords() {
         let param = {
             type: "2",
-            toUserId: util.getCookie("userId"),
             size: 10,
             offset: this.state.offset,
             tokenUser: localStorage.getItem('tokenUser'),
@@ -103,22 +102,40 @@ export default class App extends EntryBase {
         })
     }
 
+    querySerialNo=()=>{
+        let {serialNo}=this.state;
+        let param = {
+            serialNo:serialNo,
+            tokenUser: localStorage.getItem('tokenUser'),
+            type:  "2" 
+        };
+        infoGet(param).then(data => {
+            window.location.href = "recive.html?from=reciveList&serialNo=" + serialNo
+        },()=>{
+            Toast.fail('此序列号不存在！')
+        })
+    }
+
     render() {
         return (
             <div className={style.container}>
                 <h2 className={style.title}>接收资料目录（按时间顺序）</h2>
                 <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
-                    {/* <List.Item>
+                    <List.Item extra={
+                        <Button className={style.x_left} type="ghost" size="small" inline onClick={this.querySerialNo}>查询</Button>
+                    }>
                         <InputItem type="number"
-                            className={classnames(style.phone)}
-                            onChange={(orderNo)=>{
+                            className={classnames(style.queryNo)}
+                            maxLength={12}
+                            onChange={(serialNo) => {
                                 this.setState({
-                                    orderNo
+                                    serialNo
                                 })
                             }}
-                            value={this.state.orderNo}
-                            clear placeholder="请输入需要查询的序列号">序列号：</InputItem>
-                    </List.Item> */}
+                            value={this.state.serialNo}
+                            placeholder="请输入序列号">序列号：</InputItem>
+
+                    </List.Item>
                     {
                         this.state.historyList.length ? this.state.historyList.map((item, index) => {
                             return <List.Item key={index}
