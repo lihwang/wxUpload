@@ -21,7 +21,7 @@ if (isIPhone) {
 
 let serialNo = util.parseUrl(location.href).params.serialNo || '';
 let from = util.parseUrl(location.href).params.from || '';
-let tokenUser = localStorage.getItem('tokenUser') || '';
+let tokenUser = sessionStorage.getItem('tokenUser') || '';
 export default class App extends EntryBase {
     constructor(props) {
         super(props);

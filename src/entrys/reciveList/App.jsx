@@ -91,7 +91,7 @@ export default class App extends EntryBase {
             type: "2",
             size: 10,
             offset: this.state.offset,
-            tokenUser: localStorage.getItem('tokenUser'),
+            tokenUser: sessionStorage.getItem('tokenUser'),
         }
         infoList(param).then(data => {
             this.setState({
@@ -106,7 +106,7 @@ export default class App extends EntryBase {
         let {serialNo}=this.state;
         let param = {
             serialNo:serialNo,
-            tokenUser: localStorage.getItem('tokenUser'),
+            tokenUser: sessionStorage.getItem('tokenUser'),
             type:  "2" 
         };
         infoGet(param).then(data => {

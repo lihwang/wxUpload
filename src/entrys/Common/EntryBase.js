@@ -32,10 +32,10 @@ class EntryBase extends React.Component {
             sign:'abc'
 		}
 		let params = util.parseUrl(location.href).params;
-		let openId=localStorage.getItem('openId');
+		let openId=sessionStorage.getItem('openId');
 		
 		if (!openId) {
-			localStorage.setItem('openId', params.openid||'');
+			sessionStorage.setItem('openId', params.openid||'');
 		}
 		// let tokenUser=localStorage.getItem("tokenUser")
 		if(!openId||!util.isWeixin()){
@@ -45,10 +45,9 @@ class EntryBase extends React.Component {
 				if(location.href.includes('login.html')){
 					location.href="index.html";
 				}else{
-					localStorage.setItem('tokenUser', data.tokenUser||'');
+					sessionStorage.setItem('tokenUser', data.tokenUser||'');
 				}
 			})
-
 		}
 
 		// checkLogin()

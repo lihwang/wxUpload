@@ -115,7 +115,7 @@ export default class App extends EntryBase {
             password: secondpw,
             topic: this.state.topic,
             text: areaValue,
-            tokenUser: localStorage.getItem('tokenUser'),
+            tokenUser: sessionStorage.getItem('tokenUser'),
             picId: this.state.picId,
             vedioId: this.state.vedioId,
             planTime: util.msecToString(new Date(this.state.sendDate).getTime(), "yyyyMMddHHmmss"),

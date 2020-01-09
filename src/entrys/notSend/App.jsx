@@ -89,7 +89,7 @@ export default class App extends EntryBase {
     getRecords() {
         let param = {
             type: "1",
-            tokenUser: localStorage.getItem('tokenUser'),
+            tokenUser: sessionStorage.getItem('tokenUser'),
             size: 10,
             offset: this.state.offset,
             status: '3'
@@ -117,7 +117,7 @@ export default class App extends EntryBase {
                                             type: "1",
                                             status: "4",
                                             serialNo: item.serialNo,
-                                            tokenUser: localStorage.getItem('tokenUser'),
+                                            tokenUser: sessionStorage.getItem('tokenUser'),
                                             password: password
                                         };
                                         infoPut(param).then(data => {
@@ -135,9 +135,7 @@ export default class App extends EntryBase {
                                 }}>取消发送</Button>}
                                 multipleLine
                             >
-                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }}  className={style.x_left} type="ghost" size="small" inline onClick={() => {
-                                    window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
-                                }}>查看</Button>
+                                {/* <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }}  className={style.x_left} type="ghost" size="small" inline>查看</Button> */}
                                 <div style={{ fontSize: 28, display: 'inline-block' }}>
                                     <span>{item.createTime}</span><br />
                                     <span>序列号:{item.serialNo}</span>

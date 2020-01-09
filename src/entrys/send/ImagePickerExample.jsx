@@ -49,7 +49,7 @@ export default class ImagePickerExample extends React.Component {
               path:saveKey,
               contentMd5:md5,
               date:date.toUTCString(),
-              tokenUser: localStorage.getItem('tokenUser'),
+              tokenUser: sessionStorage.getItem('tokenUser'),
             }
             sign(signData).then(res=>{
               var n = new FormData;
@@ -74,7 +74,7 @@ export default class ImagePickerExample extends React.Component {
                       contentLength: file.size,
                       userId: this.props.userId,
                       secret: "",
-                      tokenUser: localStorage.getItem('tokenUser'),
+                      tokenUser: sessionStorage.getItem('tokenUser'),
                     }).then(data=>{
                       this.props.getPicId&&this.props.getPicId(data.ossId),
                       this.setState({

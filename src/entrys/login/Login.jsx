@@ -98,7 +98,7 @@ export default class App extends React.Component {
         }
         let registerData = {
             mobile: this.state.phone.replace(/\s+/g, ""),
-            openid: localStorage.getItem('openId'),
+            openid: sessionStorage.getItem('openId'),
             smsCode: this.state.msgCode,
             password: '',
         }

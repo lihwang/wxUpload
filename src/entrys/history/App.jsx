@@ -94,7 +94,7 @@ export default class App extends EntryBase {
             status:0,
             size: 10,
             offset: this.state.offset,
-            tokenUser: localStorage.getItem('tokenUser'),
+            tokenUser: sessionStorage.getItem('tokenUser'),
         }
         infoList(param).then(data=>{
             this.setState({
@@ -145,7 +145,7 @@ export default class App extends EntryBase {
                                         remove: "1",
                                         status: "4",
                                         serialNo: item.serialNo,
-                                        tokenUser: localStorage.getItem('tokenUser'),
+                                        tokenUser: sessionStorage.getItem('tokenUser'),
                                     };
                                     infoPut(param).then(data=>{
                                         Toast.success('删除成功');
@@ -165,7 +165,7 @@ export default class App extends EntryBase {
                         }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
                             let param={
                                 payOrderNo:item.payOrderNo,
-                                tokenUser: localStorage.getItem('tokenUser'),
+                                tokenUser: sessionStorage.getItem('tokenUser'),
                                 type:'1',
                             }
 

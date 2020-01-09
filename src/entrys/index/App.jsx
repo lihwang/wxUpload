@@ -10,6 +10,8 @@ import { Toast } from 'antd-mobile';
 import util from "commons/util";
 //api
 import { oauth2, queryUser } from "api/api";
+let openid = util.parseUrl(location.href).params.openid || '';
+
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
@@ -18,10 +20,9 @@ export default class App extends EntryBase {
         };
     }
 
+    
     componentDidMount() {
         super.componentDidMount();
-
-
     }
 
     render() {

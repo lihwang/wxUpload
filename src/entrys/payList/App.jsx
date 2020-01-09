@@ -94,7 +94,7 @@ export default class App extends EntryBase {
             extendStatus:'1',
             size: 10,
             offset: this.state.offset,
-            tokenUser: localStorage.getItem('tokenUser'),
+            tokenUser: sessionStorage.getItem('tokenUser'),
         }
         infoList(param).then(data => {
             this.setState({
@@ -124,7 +124,7 @@ export default class App extends EntryBase {
                                                     remove: "1",
                                                     status: "4",
                                                     serialNo: item.serialNo,
-                                                    tokenUser: localStorage.getItem('tokenUser'),
+                                                    tokenUser: sessionStorage.getItem('tokenUser'),
                                                 };
                                                 infoPut(param).then(data => {
                                                     Toast.success('删除成功');
