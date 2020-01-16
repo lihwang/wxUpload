@@ -17,8 +17,8 @@ class EntryBase extends React.Component {
 	}
 
 	componentWillMount() {
-
-	}
+		document.querySelector(".layout-fake").className += " didMount";
+	  }
 
 	login(){
 		// login()
@@ -43,7 +43,7 @@ class EntryBase extends React.Component {
 		}else{
 			login({openid:openId}).then((data)=>{
 				if(location.href.includes('login.html')){
-					location.href="index.html";
+					// location.href="index.html";
 				}else{
 					sessionStorage.setItem('tokenUser', data.tokenUser||'');
 				}

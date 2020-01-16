@@ -1,5 +1,67 @@
 <!-- fake start -->
+<style>
+    .layout-fake {
+        text-align: center;
+        padding-top: 262px;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: #FFF;
+        
+    }
 
+    .layout-fake.didMount {
+        transform: scale(2);
+        opacity: 0;
+    }
+
+    .layout-fake .company {
+        font-size: 36px;
+        font-weight: 100;
+        color: rgba(0, 0, 0, 1);
+        line-height: 50px;
+        letter-spacing: 4px;
+        margin-top: 6px;
+    }
+
+    .layout-fake .loading {
+        padding-top: 56px;
+    }
+
+    .layout-fake .loading .dot {
+        width: 12px;
+        height: 12px;
+        background: #EFEFEF;
+        border-radius: 50%;
+        margin-right: 28px;
+        display: inline-block;
+    }
+
+    .layout-fake .loading .dot:last-child {
+        margin-right: 0;
+    }
+    .layout-fake .loading .dot1{
+        animation: dot1an  1.5s  infinite;
+    }
+    .layout-fake .loading .dot2{
+        animation: dot1an  1.5s .5s  infinite;
+    }
+    .layout-fake .loading .dot3{
+        animation: dot1an  1.5s 1s  infinite;
+    }
+
+    @keyframes dot1an{
+        from {background: #AFAFAF;}
+        to {background: #EFEFEF;}
+    }
+</style>
 <div id="layout-fake" class="layout-fake">
+    <div><img src="./icon.png" alt=""></div>
+    <div class="company">天易智联·时光胶囊 </div>
+    <div class="loading">
+        <div class="dot1 dot"></div>
+        <div class="dot2 dot"></div>
+        <div class="dot3 dot"></div>
+    </div>
 </div>
 <!-- fake end -->
