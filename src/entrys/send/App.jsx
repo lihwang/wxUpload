@@ -13,6 +13,7 @@ import {
     InputItem,
     WhiteSpace, TextareaItem, Modal, Toast, Checkbox
 } from 'antd-mobile';
+import classnames from 'classnames';
 const AgreeItem = Checkbox.AgreeItem;
 import ImagePickerExample from './ImagePickerExample'
 import util from "commons/util";
@@ -37,8 +38,8 @@ export default class App extends EntryBase {
             topic: "测试",
             payParam: {},
             hasQuestion: false,
-            question:'',
-            answer:''
+            question: '',
+            answer: ''
         }
         this.canClick = true;
     }
@@ -90,7 +91,7 @@ export default class App extends EntryBase {
 
 
     sendInfo = () => {
-        let { phoneList, areaValue, firstpw, secondpw, sendDate, hasError, hasQuestion,question,answer } = this.state;
+        let { phoneList, areaValue, firstpw, secondpw, sendDate, hasError, hasQuestion, question, answer } = this.state;
         for (let i = 0; i < phoneList.length; i++) {
             if (!!phoneList[i].phone) {
                 if (!/^1\d{10}/.test(phoneList[i].phone.replace(/\s/g, ''))) {
@@ -111,7 +112,7 @@ export default class App extends EntryBase {
         //     return Toast.fail("自定义问题和答案必填！");
         // }
         var param = {
-            mobile: phoneList.map(item=>item.phone.replace(/\s/g, '')).join(','),
+            mobile: phoneList.map(item => item.phone.replace(/\s/g, '')).join(','),
             password: secondpw,
             topic: this.state.topic,
             text: areaValue,
@@ -119,10 +120,10 @@ export default class App extends EntryBase {
             picId: this.state.picId,
             vedioId: this.state.vedioId,
             planTime: util.msecToString(new Date(this.state.sendDate).getTime(), "yyyyMMddHHmmss"),
-            passwdAsk:question,
-            passwdReply:answer
+            passwdAsk: question,
+            passwdReply: answer
         };
-  
+
         if (this.canClick) {
             this.canClick = false;
             info(param).then(res => {
@@ -154,8 +155,7 @@ export default class App extends EntryBase {
     render() {
         return (<div className={style.container}>
             <div className={style.mian} hidden={(!this.state.isHiddenTextArea) || (!this.state.isHiddenPic)}>
-                <h2 className={style.title}>选择发送对象 微信好友</h2>
-                <WhiteSpace />
+                <div className={style.title}>选择发送对象·微信好友</div>
                 {
                     this.state.phoneList.map((item, index) => {
                         return <PhoneInput key={item.id} index={index} phone={item.phone} changePhone={(phone) => {
@@ -173,62 +173,27 @@ export default class App extends EntryBase {
                         }} />
                     })
                 }
-                <div className={style.addPhone} hidden={this.state.phoneList.length == 5} onClick={this.addPhone}>
-                    <div className={style.addIcon}>+</div>添加发送人
-                    </div>
-                <Flex>
-                    <Flex.Item>
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                this.setState({
-                                    isHiddenTextArea: false
-                                })
-                            }}
-                            style={{
-                                marginLeft: 10
-                            }}
-                            inline>输入文字</Button>
-                    </Flex.Item>
-                    <Flex.Item>
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                this.setState({
-                                    isHiddenPic: false
-                                })
-                            }}
-                            style={{
-                                marginLeft: 10
-                            }}
-                            inline>导入照片</Button>
-                    </Flex.Item>
-                    <Flex.Item>
-                        <Button
-                            disabled
-                            type="primary"
-                            style={{
-                                marginLeft: 10
-                            }}
-                            inline>导入视频</Button>
-                    </Flex.Item>
-                </Flex>
-                <WhiteSpace size='lg' />
-                <DatePicker
-                    minDate={new Date()}
-                    minuteStep={5}
-                    value={this.state.sendDate}
-                    onChange={sendDate => this.setState({ sendDate })}>
-                    <List.Item arrow="horizontal">设定发送时间</List.Item>
-                </DatePicker>
-                <WhiteSpace size='lg' />
-                <InputItem maxLength='6' value={this.state.firstpw} onChange={firstpw => this.setState({ firstpw })} type="password" placeholder="****">设置取消密码</InputItem>
-                <WhiteSpace size='lg' />
-               
-                <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({ secondpw })} type="password" placeholder="****">再次确认密码</InputItem>
-                <WhiteSpace size='lg' />
-                <div className={style.passWordTips}>发送时间到达前，可凭此密码取消发送，密码输入错误，会导致系统立刻发送！只有一次机会！！不可逆！！！敬请牢记！！！如需长期保存建议</div>
-                <WhiteSpace size='lg' />
+                <div className={style.addPhone} hidden={this.state.phoneList.length == 5} onClick={this.addPhone}>+  添加发送人</div>
+                <div className={style.operate}>
+                    <div className={style.inputFont}>输入文字</div>
+                    <div className={style.inputFont}>导入照片</div>
+                    <div className={style.inputVideo}>导入视频</div>
+                </div>
+                <div className={style.selectTime}>
+                    <DatePicker
+                        minDate={new Date()}
+                        minuteStep={5}
+                        value={this.state.sendDate}
+                        onChange={sendDate => this.setState({ sendDate })}>
+                        <List.Item arrow="horizontal">设定发送时间</List.Item>
+                    </DatePicker>
+                </div>
+                <div className={style.inputPw}>
+                    <InputItem maxLength='6' value={this.state.firstpw} onChange={firstpw => this.setState({ firstpw })} type="password" placeholder="****">设置取消密码</InputItem>
+                    <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({ secondpw })} type="password" placeholder="****">再次确认密码</InputItem>
+                </div>
+                <div className={style.passWordTips}>发送时间到达前，可凭此密码取消发送，密码输入错误，会导致系统立刻发送！<span>只有一次机会！！不可逆！！</span></div>
+                <div className={classnames(style.sendInfo,{[style.canclick]:!this.canClick})}>所有资料准备完毕，确认上传</div>
                 {/* <AgreeItem onChange={e => {
                     this.setState({
                         hasQuestion: e.target.checked
@@ -251,7 +216,7 @@ export default class App extends EntryBase {
                         }}>自定义答案</InputItem>
                 </div>
                 <WhiteSpace size='lg' /> */}
-                <Button disabled={!this.canClick} type="primary" onClick={this.sendInfo}>所有资料准备完毕，确认上传</Button>
+                {/* <Button disabled={!this.canClick} type="primary" onClick={this.sendInfo}>所有资料准备完毕，确认上传</Button> */}
             </div>
             {/* <Modal
                 visible={this.state.modal1}

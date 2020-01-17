@@ -4,7 +4,7 @@ import {
 } from 'antd-mobile';
 import style from './styles/PhoneInput.less';
 import classnames from 'classnames'
-
+import phoneIcon from './images/phone.png' 
 export default class PhoneInput extends Component {
     constructor(props){
         super(props);
@@ -50,8 +50,7 @@ export default class PhoneInput extends Component {
                     onChange={this.onChange}
                     error={this.state.hasError}
                     value={this.state.phone}
-                    clear placeholder="1** **** ****">手机号：</InputItem>
-                <WhiteSpace size='lg'/>
+                    clear placeholder="输入手机号"><img src={phoneIcon} alt=""/></InputItem>
             </div>
         )
     }
