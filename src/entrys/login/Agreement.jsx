@@ -23,6 +23,7 @@ export default class Agreement extends React.Component {
 
     render() {
         return (<div className={style.container}>
+            <div className={style.title}>服务协议</div>
            <div className={style.content}>
             <div>本服务协议，由天易智联网络科技有限公司（以下简称本公司），针对本公司开发的公众号《天易智联时光胶囊》设置。凡用户使用本公众号，必须同意本协议。否则恕不提供服务！本协议会因为客观原因，不断修改，并且重新发布。恳请用户不定期光顾本页面，以确保对本公司最新版本的了解。</div>
                 <div>本协议分六个部分。一隐私政策。二，用户权力。三，用户义务。四，使用方法。五，免责条款。六，联系我们。</div>
@@ -51,8 +52,10 @@ export default class Agreement extends React.Component {
                 <div className={style.sub}>六，免责条款</div>
                 <p>本公司在此声明，不可抗力包括：火灾，洪水，地震，陨石降落，海啸，公共电网（国家电网）故障，基础电信设施故障（包含移动/联通/电信/网通），战争。以上原因造成的信息无法按照发送方用户要求完成传递，以及用户信息泄密，本公司不承担赔偿责任。另：由于用户没有认真阅读并且理解本协议所指导的使用方法，未能正确操作，所造成的信息传递不成功，本公司不承担赔偿责任。</p>
                 <div className={style.sub}>七，联系方式</div>
-                <p>本公众号联系电话400xxx xxx 邮箱18626882775@wo.cn 24小时服务官方微信xxxxxxxxxxx</p>
-                <div className={style.btn}><Button onClick={()=>{location.href='./login.html#/Login'}} type="primary">同意协议</Button></div>
+                <div className={style.connect}>本公众号联系电话：400xxx xxx</div>
+                <div className={style.connect}>邮箱：18626882775@wo.cn</div>
+                <div className={style.connect}>24小时服务官方微信：xxxxxxxxxxx</div>
+                <div className={style.btn} onClick={()=>{location.href='./login.html#/Login'}}>同意协议</div>
            </div>
            
         </div>

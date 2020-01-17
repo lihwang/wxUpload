@@ -5,9 +5,12 @@ import React from 'react';
 import style from './styles/App.less';
 import { Button, WhiteSpace, InputItem, List, Toast } from 'antd-mobile';
 import util from "commons/util";
+import classnames from 'classnames'
 
 //api
 import { sms, queryUser, register, oauth2 } from "api/api";
+//image
+import logo from './images/logo.png'
 export default class App extends React.Component {
     constructor(props) {
         super(props);
@@ -26,6 +29,9 @@ export default class App extends React.Component {
 
 
     calSecond = () => {
+        if(this.state.noClick){
+            return false;
+        }
         if (this.state.hasError) {
             Toast.fail('手机号码不正确');
             return false;
@@ -87,7 +93,7 @@ export default class App extends React.Component {
     }
 
     //注册
-    regist() {
+    regist=()=> {
         if (this.state.hasError) {
             Toast.info('请输入正确手机号');
             return false;
@@ -114,33 +120,27 @@ export default class App extends React.Component {
     }
 
     render() {
+        let {msgCode,hasError}=this.state;
         return (<div className={style.container}>
-            <h2 className={style.title}>欢迎来到时光胶囊</h2>
-            <WhiteSpace size='lg' />
-            <div style={{ textAlign: 'center' }}>
-                <Button type='ghost' inline>首次登录请授权微信号关联手机认证</Button>
-            </div>
-            <WhiteSpace size='lg' />
-            <List style={{ margin: '5px 0' }}>
-                <List.Item>
+            <div className={style.title}>欢迎来到时光胶囊</div>
+            <div className={style.subTitle}>首次登录请授权微信号关联手机</div>
+            <div className={style.inputBox}>
+                <div className={style.inputItem}>
                     <InputItem type="phone"
                         onChange={this.onChange}
                         error={this.state.hasError}
                         onErrorClick={this.onErrorClick}
                         value={this.state.phone}
-                        clear placeholder="1** **** ****">手机号：</InputItem>
-                </List.Item>
-                <WhiteSpace size='lg' />
-                <List.Item
-                    extra={<Button type="ghost" disabled={this.state.noClick} size="small" onClick={this.calSecond} inline>{this.state.msg}</Button>}
-                    multipleLine>
-                    <InputItem maxLength='6' placeholder='****' value={this.state.msgCode} onChange={this.onChangeCode}>验证码：</InputItem>
-                </List.Item>
-            </List>
-            <WhiteSpace size='lg' />
-            <div className={style.btn}>
-                <Button onClick={() => this.regist()} type="primary">确认</Button>
+                        clear placeholder="请输入手机号码"></InputItem>
+                </div>
+                <div className={style.inputItem}>
+                    <InputItem maxLength='6' placeholder='请输入验证码' value={this.state.msgCode} onChange={this.onChangeCode}></InputItem>
+                    <div className={style.sendCode} onClick={this.calSecond}>{this.state.msg}</div>
+                </div>
             </div>
+            <div className={classnames(style.registBtn,{[style.canlogin]:!hasError&&msgCode})} onClick={this.regist}>登录</div>
+            <div className={style.company}>天易智联出品</div>
+            <div className={style.logo}><img src={logo} alt=""/></div>
         </div>
         )
     }
