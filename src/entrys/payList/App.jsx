@@ -11,6 +11,8 @@ import { infoList, infoPut, payGet } from "api/api";
 let status = {
     0: '初始状态', 2: '取消', 3: '已经支付'
 }
+//image
+import nodata from 'images/nodata.png'
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
@@ -91,7 +93,7 @@ export default class App extends EntryBase {
     getRecords() {
         let param = {
             type: "2",
-            extendStatus:'1',
+            extendStatus: '1',
             size: 10,
             offset: this.state.offset,
             tokenUser: sessionStorage.getItem('tokenUser'),
@@ -109,12 +111,21 @@ export default class App extends EntryBase {
     render() {
         return (
             <div className={style.container}>
-                <h2 className={style.title}>保存列表（按时间顺序）</h2>
-                <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
+                <div className={style.title}>保存列表（按时间顺序）</div>
+                <div>
                     {
                         this.state.historyList.length ? this.state.historyList.map((item, index) => {
-                            return <List.Item key={index}
-                                extra={item.status != 0 ? <Button type="warning" size="small" style={{ verticalAlign: 'sub' }} inline onClick={() => {
+                            return <div className={style.historyItem} key={item.serialNo}>
+                                <div className={style.delOperate} onClick={() => {
+                                    window.location.href = "recive.html?from=payList&serialNo=" + item.serialNo
+                                }}>续保</div>
+                                <div className={style.info} onClick={() => {
+                                    window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                                }}>
+                                    <div className={style.serialNo}>序列号  {item.serialNo} <span>{status[item.status] ? (status[item.status]) : ''}</span></div>
+                                    <div className={style.createTime}>到期时间 {JSON.parse(item.attach).expiresTime}</div>
+                                </div>
+                                {item.status != 0 ? <div className={style.cancelOperate} onClick={() => {
                                     alert('提示', '是否确认删除该数据？', [
                                         { text: '取消' },
                                         {
@@ -137,25 +148,34 @@ export default class App extends EntryBase {
                                             }
                                         },
                                     ])
-                                }}>删除</Button> : ''}
+                                }}>删除</div> : ''}
+                            </div>
+                        }) : <div style={{ textAlign: 'center', padding: '0 30px' }}>
+                                <div style={{ marginTop: '300px' }}><img src={nodata} alt="" /></div>
+                            </div>
+                    }
+                    {/* {
+                        this.state.historyList.length ? this.state.historyList.map((item, index) => {
+                            return <List.Item key={index}
+                                extra={item.status != 0 ? <Button type="warning" size="small" style={{ verticalAlign: 'sub' }} inline>删除</Button> : ''}
                                 multipleLine
                             >
-                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '15px' }}  onClick={() => {
+                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '15px' }} onClick={() => {
                                     window.location.href = "recive.html?from=payList&serialNo=" + item.serialNo
                                 }} className={style.x_left} type="ghost" size="small" inline >续保</Button>
-                                <div style={{ fontSize: 26, display: 'inline-block' }} onClick={()=>{
-                                     window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                                <div style={{ fontSize: 26, display: 'inline-block' }} onClick={() => {
+                                    window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
                                 }}>
                                     <span>到期时间：{JSON.parse(item.attach).expiresTime}</span><br />
-                                    <span>序列号:{item.serialNo}{status[item.status] ? (' | ' + status[item.status]) : ''}</span>
+                                    <span>序列号:{item.serialNo}</span>
                                 </div>
                             </List.Item>
                         }) : <div style={{ textAlign: 'center', padding: 30 }}>
                                 <div><Icon type="cross-circle" size="large" /></div>
                                 <div>暂无数据</div>
                             </div>
-                    }
-                </List>
+                    } */}
+                </div>
             </div>
         )
     }

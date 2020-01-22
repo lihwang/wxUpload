@@ -7,8 +7,10 @@ import { Button, Modal, List, Toast, Icon } from 'antd-mobile';
 import style from './styles/App.less';
 import util from "commons/util";
 const prompt = Modal.prompt;
+const alert = Modal.alert;
 import { infoList, infoPut } from "api/api";
-
+//image
+import nodata from 'images/nodata.png'
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
@@ -106,47 +108,64 @@ export default class App extends EntryBase {
     render() {
         return (
             <div className={style.container}>
-                <h2 className={style.title}>取消发送（按时间顺序）</h2>
-                <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
-                    {
-                        this.state.historyList.length ? this.state.historyList.map((item, index) => {
-                            return <List.Item key={index}
-                                extra={<Button type="warning" size="small" inline onClick={() => {
-                                    prompt('提示', '是否确认取消该数据(输入错误密码，系统自动发送，不可逆)？', (password) => {
-                                        var param = {
-                                            type: "1",
-                                            status: "4",
-                                            serialNo: item.serialNo,
-                                            tokenUser: sessionStorage.getItem('tokenUser'),
-                                            password: password
-                                        };
-                                        infoPut(param).then(data => {
-                                            Toast.success('取消成功');
-                                            let historyList=this.state.historyList;
-                                            historyList.splice(index,1);
-                                            this.setState({
-                                                historyList:historyList
+                <div className={style.title}>取消发送（按时间顺序）</div>
+                {
+                    this.state.historyList.length ? this.state.historyList.map((item, index) => {
+                        return <div className={style.historyItem} key={item.serialNo}>
+                            <div className={style.delOperate} onClick={() => {
+                                alert('提示', '删除是删除列表，不是取消发送。删除以后，不能再进行取消发送操作，是否继续？', [
+                                    { text: '取消' },
+                                    {
+                                        text: '确认', onPress: () => {
+                                            var param = {
+                                                type: "1",
+                                                remove: "1",
+                                                status: "4",
+                                                serialNo: item.serialNo,
+                                                tokenUser: sessionStorage.getItem('tokenUser'),
+                                            };
+                                            infoPut(param).then(data => {
+                                                Toast.success('删除成功');
+                                                let historyList = this.state.historyList;
+                                                historyList.splice(index, 1);
+                                                this.setState({
+                                                    historyList: historyList
+                                                })
                                             })
-                                        }, (error) => {
-                                            // error && error.message && Toast.fail(error.message);
-                                            location.reload();
-                                        })
-                                    }, 'secure-text', '', ['请输入取消密码'])
-                                }}>取消发送</Button>}
-                                multipleLine
-                            >
-                                {/* <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }}  className={style.x_left} type="ghost" size="small" inline>查看</Button> */}
-                                <div style={{ fontSize: 28, display: 'inline-block' }}>
-                                    <span>{item.createTime}</span><br />
-                                    <span>序列号:{item.serialNo}</span>
-                                </div>
-                            </List.Item>
-                        }) : <div style={{ textAlign: 'center', padding: 30 }}>
-                                <div><Icon type="cross-circle" size="large" /></div>
-                                <div>暂无数据</div>
+                                        }
+                                    },
+                                ])
+                            }}>删除</div>
+                            <div className={style.info}>
+                                <div className={style.serialNo}>序列号  {item.serialNo}</div>
+                                <div className={style.createTime}>{item.createTime}</div>
                             </div>
-                    }
-                </List>
+                            <div className={style.cancelOperate} onClick={() => {
+                                prompt('提示', '是否确认取消该数据(输入错误密码，系统自动发送，不可逆)？', (password) => {
+                                    var param = {
+                                        type: "1",
+                                        status: "4",
+                                        serialNo: item.serialNo,
+                                        tokenUser: sessionStorage.getItem('tokenUser'),
+                                        password: password
+                                    };
+                                    infoPut(param).then(data => {
+                                        Toast.success('取消成功');
+                                        let historyList = this.state.historyList;
+                                        historyList.splice(index, 1);
+                                        this.setState({
+                                            historyList: historyList
+                                        })
+                                    }, (error) => {
+                                        location.reload();
+                                    })
+                                }, 'secure-text', '', ['请输入取消密码'])
+                            }}>取消发送</div>
+                        </div>
+                    }) : <div style={{ textAlign: 'center', padding: '0 30px' }}>
+                            <div style={{ marginTop: '300px' }}><img src={nodata} alt="" /></div>
+                        </div>
+                }
             </div>
         )
     }

@@ -39,7 +39,8 @@ export default class App extends EntryBase {
             payParam: {},
             hasQuestion: false,
             question: '',
-            answer: ''
+            answer: '',
+            canClick:false
         }
         this.canClick = true;
     }
@@ -86,8 +87,29 @@ export default class App extends EntryBase {
     addPhone = () => {
         this.setState({
             phoneList: [...this.state.phoneList, { phone: '', id: 'id' + new Date().getTime() }]
+        },this.judgeCanClick)
+    }
+
+    judgeCanClick=()=>{
+        let { phoneList, areaValue, firstpw, secondpw, sendDate, hasError, hasQuestion, question, answer } = this.state;
+        let canClick=true;
+        for (let i = 0; i < phoneList.length; i++) {
+            if (!phoneList[i].phone) {
+                canClick=false;
+            }
+        }
+
+        if (!areaValue) canClick=false;
+        if (!firstpw) canClick=false;
+        if (!secondpw) canClick=false;
+        if (!sendDate) canClick=false;
+        console.log(canClick)
+        this.setState({
+            canClick
         })
     }
+
+    
 
 
     sendInfo = () => {
@@ -153,8 +175,9 @@ export default class App extends EntryBase {
     }
 
     render() {
+        let { isHiddenTextArea,canClick } = this.state;
         return (<div className={style.container}>
-            <div className={style.mian} hidden={(!this.state.isHiddenTextArea) || (!this.state.isHiddenPic)}>
+            <div className={style.mian} hidden={(!isHiddenTextArea) || (!this.state.isHiddenPic)}>
                 <div className={style.title}>选择发送对象·微信好友</div>
                 {
                     this.state.phoneList.map((item, index) => {
@@ -163,7 +186,7 @@ export default class App extends EntryBase {
                             newList[index].phone = phone;
                             this.setState({
                                 phoneList: newList
-                            })
+                            },this.judgeCanClick)
                         }} delIndex={() => {
                             let newList = this.state.phoneList;
                             newList.splice(index, 1);
@@ -175,8 +198,16 @@ export default class App extends EntryBase {
                 }
                 <div className={style.addPhone} hidden={this.state.phoneList.length == 5} onClick={this.addPhone}>+  添加发送人</div>
                 <div className={style.operate}>
-                    <div className={style.inputFont}>输入文字</div>
-                    <div className={style.inputFont}>导入照片</div>
+                    <div className={style.inputFont} onClick={() => {
+                        this.setState({
+                            isHiddenTextArea: false
+                        })
+                    }}>输入文字</div>
+                    <div className={style.inputFont} onClick={() => {
+                        this.setState({
+                            isHiddenPic: false
+                        },this.judgeCanClick)
+                    }}>导入照片</div>
                     <div className={style.inputVideo}>导入视频</div>
                 </div>
                 <div className={style.selectTime}>
@@ -184,82 +215,50 @@ export default class App extends EntryBase {
                         minDate={new Date()}
                         minuteStep={5}
                         value={this.state.sendDate}
-                        onChange={sendDate => this.setState({ sendDate })}>
+                        onChange={sendDate => this.setState({ sendDate },this.judgeCanClick)}>
                         <List.Item arrow="horizontal">设定发送时间</List.Item>
                     </DatePicker>
                 </div>
                 <div className={style.inputPw}>
-                    <InputItem maxLength='6' value={this.state.firstpw} onChange={firstpw => this.setState({ firstpw })} type="password" placeholder="****">设置取消密码</InputItem>
-                    <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({ secondpw })} type="password" placeholder="****">再次确认密码</InputItem>
+                    <InputItem maxLength='6' value={this.state.firstpw} onChange={firstpw => this.setState({ firstpw },this.judgeCanClick)} type="password" placeholder="****">设置取消密码</InputItem>
+                    <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({ secondpw },this.judgeCanClick)} type="password" placeholder="****">再次确认密码</InputItem>
                 </div>
                 <div className={style.passWordTips}>发送时间到达前，可凭此密码取消发送，密码输入错误，会导致系统立刻发送！<span>只有一次机会！！不可逆！！</span></div>
-                <div className={classnames(style.sendInfo,{[style.canclick]:!this.canClick})}>所有资料准备完毕，确认上传</div>
-                {/* <AgreeItem onChange={e => {
-                    this.setState({
-                        hasQuestion: e.target.checked
-                    })
-                }}>
-                    是否要添加找回取消密码自定义问题
-                    </AgreeItem>
-                <div hidden={!this.state.hasQuestion}>
-                    <InputItem placeholder="请输入自定义问题？" maxLength={25} value={this.state.question}
-                        onChange={(question) => {
-                            this.setState({
-                                question
-                            })
-                        }}>自定义问题</InputItem>
-                    <InputItem placeholder="请输入问题答案？" maxLength={10} value={this.state.answer}
-                        onChange={(answer) => {
-                            this.setState({
-                                answer
-                            })
-                        }}>自定义答案</InputItem>
-                </div>
-                <WhiteSpace size='lg' /> */}
-                {/* <Button disabled={!this.canClick} type="primary" onClick={this.sendInfo}>所有资料准备完毕，确认上传</Button> */}
+                <div className={classnames(style.sendInfo, { [style.canclick]: canClick })} onClick={this.sendInfo}>所有资料准备完毕，确认上传</div>
             </div>
-            {/* <Modal
-                visible={this.state.modal1}
-                transparent
-                maskClosable={false}
-                onClose={() => { this.onClose('modal1') }}
-                title="提示"
-                footer={[{ text: 'Ok', onPress: () => { this.onClose('modal1') } }]}
-            >
-                <div>
-                    您的资料已接收<br />
-                    时间：**年**月**日**点**分<br />
-                    将按照您设定的时间发送
-                    </div>
-            </Modal> */}
-            <List hidden={this.state.isHiddenTextArea} renderHeader={() => '请输入文字资料'}>
-                <TextareaItem
-                    placeholder='请输入内容'
-                    rows={15}
-                    count={300}
-                    value={this.state.areaValue}
-                    onChange={(areaValue) => {
+            <div className={style.inputDetail}>
+                <div hidden={isHiddenTextArea}>
+                    <List renderHeader={() => '请输入文字资料'}>
+                        <TextareaItem
+                            placeholder='请输入内容'
+                            rows={15}
+                            count={300}
+                            value={this.state.areaValue}
+                            onChange={(areaValue) => {
+                                this.setState({
+                                    areaValue
+                                })
+                            }}
+                        />
+                    </List>
+                    <div className={style.sureInputText} onClick={() => {
                         this.setState({
-                            areaValue
+                            isHiddenTextArea: true
+                        },this.judgeCanClick)
+                    }}>输入完毕</div>
+                </div>
+                <div className={style.imageInput} hidden={this.state.isHiddenPic}>
+                    <div className={style.imgTitle}>请选择上传照片</div>
+                    <ImagePickerExample userId={this.userId} getPicId={this.getPicId} />
+                    <WhiteSpace size='lg' />
+                    <div className={style.sureInputText} onClick={() => {
+                        this.setState({
+                            isHiddenPic: true
                         })
-                    }}
-                />
-                <WhiteSpace size='lg' />
-                <div><Button onClick={() => {
-                    this.setState({
-                        isHiddenTextArea: true
-                    })
-                }} type="primary">输入完毕</Button></div>
-            </List>
-            <List hidden={this.state.isHiddenPic} renderHeader={() => '请选择上传照片'}>
-                <ImagePickerExample userId={this.userId} getPicId={this.getPicId} />
-                <WhiteSpace size='lg' />
-                <div><Button onClick={() => {
-                    this.setState({
-                        isHiddenPic: true
-                    })
-                }} type="primary" >导入完毕</Button></div>
-            </List>
+                    }}>导入完毕</div>
+                </div>
+            </div>
+
         </div>
         )
     }

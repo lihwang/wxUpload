@@ -8,8 +8,10 @@ import style from './styles/App.less';
 import classnames from 'classnames'
 import util from "commons/util";
 const alert = Modal.alert;
-import { infoList, infoPut,infoGet } from "api/api";
-
+import { infoList, infoPut, infoGet } from "api/api";
+//image
+import nodata from 'images/nodata.png'
+import receiveItem from 'images/receiveItem.png'
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
@@ -102,16 +104,16 @@ export default class App extends EntryBase {
         })
     }
 
-    querySerialNo=()=>{
-        let {serialNo}=this.state;
+    querySerialNo = () => {
+        let { serialNo } = this.state;
         let param = {
-            serialNo:serialNo,
+            serialNo: serialNo,
             tokenUser: sessionStorage.getItem('tokenUser'),
-            type:  "2" 
+            type: "2"
         };
         infoGet(param).then(data => {
             window.location.href = "recive.html?from=reciveList&serialNo=" + serialNo
-        },()=>{
+        }, () => {
             Toast.fail('此序列号不存在！')
         })
     }
@@ -119,27 +121,35 @@ export default class App extends EntryBase {
     render() {
         return (
             <div className={style.container}>
-                <h2 className={style.title}>接收资料目录（按时间顺序）</h2>
-                <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
-                    <List.Item extra={
-                        <Button className={style.x_left} type="ghost" size="small" inline onClick={this.querySerialNo}>查询</Button>
-                    }>
-                        <InputItem type="number"
-                            className={classnames(style.queryNo)}
-                            maxLength={12}
-                            onChange={(serialNo) => {
-                                this.setState({
-                                    serialNo
-                                })
-                            }}
-                            value={this.state.serialNo}
-                            placeholder="请输入序列号">序列号：</InputItem>
-
-                    </List.Item>
+                <div className={style.title}>接收资料目录（按时间顺序）</div>
+                <div className={style.queryInput}>
+                    <InputItem type="number"
+                        className={classnames(style.queryNo)}
+                        maxLength={12}
+                        onChange={(serialNo) => {
+                            this.setState({
+                                serialNo
+                            })
+                        }}
+                        value={this.state.serialNo}
+                        placeholder="请输入内容">序列号</InputItem>
+                    <div className={style.queryBtn} onClick={this.querySerialNo}>查询</div>
+                </div>
+                <div className={style.listTips}>已收消息（每条消息只保留<span>48</span>小时）</div>
+                <div className={style.receiveList}>
                     {
                         this.state.historyList.length ? this.state.historyList.map((item, index) => {
-                            return <List.Item key={index}
-                                extra={<Button type="warning" size="small" inline onClick={() => {
+                            return <div className={style.receiveItem} key={item.serialNo}>
+                                <img src={receiveItem} onClick={() => {
+                                    window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
+                                }} />
+                                <div className={style.info} onClick={() => {
+                                    window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                                }}>
+                                    <div className={style.serialNo}>序列号:{item.serialNo}</div>
+                                    <div className={style.time}>{item.createTime}</div>
+                                </div>
+                                <div className={style.delItem} onClick={() => {
                                     alert('提示', '是否确认删除该数据？', [
                                         { text: '取消' },
                                         {
@@ -162,25 +172,13 @@ export default class App extends EntryBase {
                                             }
                                         },
                                     ])
-                                }}>删除</Button>}
-                                multipleLine
-                            >
-                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '15px' }}  className={style.x_left} type="ghost" size="small" inline onClick={() => {
-                                    window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
-                                }}>查看</Button>
-                                <div style={{ fontSize: 26, display: 'inline-block' }} onClick={()=>{
-                                     window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
-                                }}>
-                                    <span>{item.createTime}</span><br />
-                                    <span>序列号:{item.serialNo}</span>
-                                </div>
-                            </List.Item>
-                        }) : <div style={{ textAlign: 'center', padding: 30 }}>
-                                <div><Icon type="cross-circle" size="large" /></div>
-                                <div>暂无数据</div>
+                                }}>删除</div>
+                            </div>
+                        }) : <div style={{ textAlign: 'center', padding: '0 30px' }}>
+                                <div style={{ marginTop: '300px' }}><img src={nodata} alt="" /></div>
                             </div>
                     }
-                </List>
+                </div>
             </div>
         )
     }

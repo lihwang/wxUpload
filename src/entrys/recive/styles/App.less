@@ -1,45 +1,171 @@
-.container{
-    .index{
-        background:#fff;
-        height:100%;
-    }
-    .tabWord{
-        border:1px solid #ccc;
-        width:500px;
-        height:200px;
-        margin:30px auto;
-    }
-    .actionBtn{
-        text-align: center;
-        background:#fff;
-        padding-bottom:20px;
-        padding-top: 20px;
-    }
-    .x-recive{
-        text-align: center;
-        font-size: 30px;
-        .tips{
-            padding-top: 20px;
-        }
-        .payTips{
-            
-        }
-    }
-    .savePage{
-        padding-top: 20px;
-    }
+html,
+body {
+    background: rgba(249, 249, 249, 1);
 }
 
-:global{
-    .am-list{
-        width: 100%;
-    }
-    .am-modal-content{
-        img{
-            width: 480px;
+.container {
+    .showPage {
+        :global {
+            .am-image-picker-item-remove {
+                display: none;
+            }
+
+            .am-tabs-tab-bar-wrap {
+                background: rgba(249, 249, 249, 1);
+
+                .am-tabs-default-bar-top .am-tabs-default-bar-tab {
+                    border-bottom: none;
+                }
+            }
+
+            .am-textarea-control textarea:disabled {
+                font-size: 30px;
+                font-family: PingFangSC-Regular,
+                    PingFang SC;
+                font-weight: 400;
+                color: #444444;
+                line-height: 42px;
+            }
+        }
+
+        .inputItem {
+            width: 658px;
+            height: 710px;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 38px;
+            margin: 34px auto 0;
+            overflow: hidden;
+
         }
     }
-    .am-image-picker-item-remove{
-        display: none;
+
+    .actionBtn {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 40px;
+
+        >div {
+            width: 266px;
+            height: 84px;
+            border-radius: 38px;
+            line-height: 84px;
+            text-align: center;
+            font-size: 32px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 1);
+            letter-spacing: 2px;
+        }
+
+        .cancelPay {
+            width: 170px;
+            height: 64px;
+            border-radius: 28px;
+            border: 2px solid #CCC;
+            ;
+        }
+
+        .toPay {
+            background: rgba(0, 224, 230, 1);
+        }
+
+        .delOperate {
+            background: rgba(238, 69, 69, 1);
+        }
+
+        .saveOperate {
+            background: rgba(0, 224, 230, 1);
+        }
+    }
+
+    .savePage {
+
+
+        .tipsTitle {
+            padding: 34px 54px;
+            font-size: 28px;
+            font-family: PingFangSC-Light, PingFang SC;
+            font-weight: 300;
+            color: rgba(111, 111, 111, 1);
+            line-height: 50px;
+
+            >div {
+                font-size: 32px;
+                font-weight: 600;
+                color: #444444;
+            }
+        }
+
+        .dayInput {
+            width: 658px;
+            height: 88px;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 38px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .payTips {
+            padding-left: 92px;
+            font-size: 28px;
+            font-family: PingFangSC-Light, PingFang SC;
+            font-weight: 300;
+            color: rgba(111, 111, 111, 1);
+            line-height: 40px;
+            margin-top: 16px;
+
+            span {
+                color: #FF6432;
+            }
+        }
+
+        .showMoney {
+            width: 658px;
+            height: 200px;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 38px;
+            position: relative;
+            margin: 40px auto;
+
+            .tips {
+                font-size: 28px;
+                font-family: PingFangSC-Light, PingFang SC;
+                font-weight: 300;
+                color: rgba(111, 111, 111, 1);
+                line-height: 40px;
+                position: absolute;
+                top: 20px;
+                left: 42px;
+            }
+
+            .money {
+                font-size: 72px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: rgba(88, 88, 88, 1);
+                line-height: 100px;
+                padding-top: 76px;
+                text-align: center;
+            }
+        }
+
+        .wxPayBtn {
+            width: 658px;
+            height: 88px;
+            background: rgba(0, 224, 230, 1);
+            border-radius: 38px;
+            line-height: 88px;
+            text-align: center;
+            font-size: 32px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 1);
+            letter-spacing: 2px;
+            margin: 36px auto;
+        }
     }
 }

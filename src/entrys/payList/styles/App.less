@@ -1,13 +1,94 @@
-.container{
-    .title{
-        text-align: center;
-        font-size: 50px;
-        margin-top: 100px;
+html,
+body {
+    background: rgba(249, 249, 249, 1);
+}
+
+.container {
+    .title {
+        font-size: 32px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 1);
+        line-height: 50px;
+        letter-spacing: 2px;
+        padding-left: 54px;
+        padding-top: 26px;
     }
-    :global{
-        .am-list-item .am-list-line .am-list-content{
-            overflow: initial;
-            text-overflow:inherit;
+
+    .historyItem {
+        display: flex;
+        flex-direction: row;
+        width: 658px;
+        height: 126px;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 38px;
+        margin: 28px auto;
+        position: relative;
+
+        .delOperate {
+            width: 72px;
+            height: 72px;
+            background: rgba(0, 224, 230, 1);
+            border-radius: 18px;
+            line-height: 72px;
+            text-align: center;
+            font-size: 28px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 1);
+            margin-top: 28px;
+            margin-left: 32px;
         }
+
+        .cancelOperate {
+            position: absolute;
+            width: 72px;
+            height: 72px;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.16);
+            border-radius: 18px;
+            text-align: center;
+            line-height: 72px;
+            font-size: 30px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: rgba(255, 21, 21, 1);
+            top: 28px;
+            right: 32px;
+        }
+
+        .info {
+            margin-top: 22px;
+            margin-left: 28px;
+            font-size: 28px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: rgba(17, 17, 17, 1);
+            line-height: 40px;
+
+            .serialNo {
+                span {
+                    font-size: 24px;
+                    font-family: PingFangSC-Medium, PingFang SC;
+                    font-weight: 500;
+                    color: rgba(8, 191, 196, 1);
+                    line-height: 34px;
+                }
+            }
+
+            .createTime {
+                color: #999999;
+                margin-top: 6px;
+            }
+        }
+
     }
+
+    // :global {
+    //     .am-list-item .am-list-line .am-list-content {
+    //         overflow: initial;
+    //         text-overflow: inherit;
+    //     }
+    // }
 }

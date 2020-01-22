@@ -3,21 +3,23 @@
  */
 import React from 'react';
 import EntryBase from '../Common/EntryBase';
-import { Button,Modal,List,Toast,Icon} from 'antd-mobile';
+import { Button, Modal, List, Toast, Icon } from 'antd-mobile';
 import style from './styles/App.less';
 import util from "commons/util";
 const alert = Modal.alert;
-import {infoList ,infoPut,payGet} from "api/api";
-let status={
-    3:'待发送',
-    1:'发送成功'
+import { infoList, infoPut, payGet } from "api/api";
+let status = {
+    3: '待发送',
+    1: '发送成功'
 }
+//image
+import nodata from 'images/nodata.png'
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
-            modal1:false,
-            historyList:[],
+            modal1: false,
+            historyList: [],
             // 正在加载
             isLoading: false,
 
@@ -26,18 +28,18 @@ export default class App extends EntryBase {
 
             // 记录scrollview-height
             recordBoxHeight: window.innerHeight,
-            offset:0
+            offset: 0
         }
     }
 
-    onClose(key){
+    onClose(key) {
         this.setState({
-        [key]: false,
+            [key]: false,
         });
     }
 
-        // 滚动
-    onScroll=()=> {
+    // 滚动
+    onScroll = () => {
         let bT = window.scrollY;// body滚动距离
         let bH = document.body.clientHeight;// body内容高度
         let wH = window.innerHeight;// 可视区域高
@@ -47,7 +49,7 @@ export default class App extends EntryBase {
     }
 
 
-    onEndReached=()=> {
+    onEndReached = () => {
         if (this.state.isLoading || this.state.noMoreResource) {
             return;
         }
@@ -65,17 +67,17 @@ export default class App extends EntryBase {
 
     httpCallBack(backDatas) {
         this.setState({
-          isLoading: false
+            isLoading: false
         });
-    
+
         if (backDatas.length < 10) {
-          this.setState({
-            noMoreResource: true
-          })
+            this.setState({
+                noMoreResource: true
+            })
         } else {
-          this.setState({
-            noMoreResource: false
-          })
+            this.setState({
+                noMoreResource: false
+            })
         }
     }
 
@@ -86,26 +88,26 @@ export default class App extends EntryBase {
     }
     componentWillUnmount() {
         document.removeEventListener('scroll', this.onScroll);//移除监听滚动
-      }
-    
-    getRecords(){
-        let param={
+    }
+
+    getRecords() {
+        let param = {
             type: "1",
-            status:0,
+            status: 0,
             size: 10,
             offset: this.state.offset,
             tokenUser: sessionStorage.getItem('tokenUser'),
         }
-        infoList(param).then(data=>{
+        infoList(param).then(data => {
             this.setState({
-                historyList:[...this.state.historyList,...data.records],
-            },()=>{
+                historyList: [...this.state.historyList, ...data.records],
+            }, () => {
                 this.httpCallBack(data.records)
             })
         })
     }
 
-    onBridgeReady  = () => {
+    onBridgeReady = () => {
         let { payParam } = this.state;
         WeixinJSBridge.invoke(
             'getBrandWCPayRequest', {
@@ -127,79 +129,94 @@ export default class App extends EntryBase {
                 }
             });
     }
-  
+
     render() {
         return (
             <div className={style.container}>
-              <h2 className={style.title}>未完成发送操作（按时间顺序）</h2>
-              <List style={{ margin: '5px 0', backgroundColor: 'white' }}>
-                  {
-                      this.state.historyList.length ? this.state.historyList.map((item,index)=>{
-                        return <List.Item key={index}
-                            extra={<Button type="warning" size="small" style={{verticalAlign: 'sub'}} inline  onClick={()=>{
-                            alert('提示', '是否确认删除该数据？', [
-                                { text: '取消'},
-                                { text: '确认', onPress: () =>{
-                                    var param = {
-                                        type: "1",
-                                        remove: "1",
-                                        status: "4",
-                                        serialNo: item.serialNo,
-                                        tokenUser: sessionStorage.getItem('tokenUser'),
-                                    };
-                                    infoPut(param).then(data=>{
-                                        Toast.success('删除成功');
-                                        let historyList=this.state.historyList;
-                                        historyList.splice(index,1);
-                                        this.setState({
-                                            historyList:historyList
-                                        })
-                                    })
-                                }},
-                              ])
-                        }}>删除</Button>}
-                        multipleLine
-                        >
-                        <Button style={{marginRight:'10px',verticalAlign: 'top',marginTop:'20px'}} onClick={()=>{
-                            window.location.href='recive.html'
-                        }} className={style.x_left} type="ghost" size="small" inline onClick={()=>{
-                            let param={
-                                payOrderNo:item.payOrderNo,
-                                tokenUser: sessionStorage.getItem('tokenUser'),
-                                type:'1',
-                            }
+                <div className={style.title}>未完成发送操作（按时间顺序）</div>
+                {
+                    this.state.historyList.length ? this.state.historyList.map((item, index) => {
+                        return <div className={style.historyItem} key={item.serialNo}>
+                            <div className={style.payOperate} onClick={() => {
+                                let param = {
+                                    payOrderNo: item.payOrderNo,
+                                    tokenUser: sessionStorage.getItem('tokenUser'),
+                                    type: '1',
+                                }
 
-                            payGet(param).then(data=>{
-                                let payParam=JSON.parse(data.records[0].payargs);
-                                this.setState({
-                                    payParam
-                                },()=>{
-                                    if (typeof WeixinJSBridge == "undefined") {
-                                        if (document.addEventListener) {
-                                            document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false);
-                                        } else if (document.attachEvent) {
-                                            document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady);
-                                            document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady);
+                                payGet(param).then(data => {
+                                    let payParam = JSON.parse(data.records[0].payargs);
+                                    this.setState({
+                                        payParam
+                                    }, () => {
+                                        if (typeof WeixinJSBridge == "undefined") {
+                                            if (document.addEventListener) {
+                                                document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false);
+                                            } else if (document.attachEvent) {
+                                                document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady);
+                                                document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady);
+                                            }
+                                        } else {
+                                            this.onBridgeReady();
                                         }
-                                    } else {
-                                        this.onBridgeReady();
-                                    }
+                                    })
                                 })
-                            })
-                        }}>去支付</Button>
-                            <div style={{fontSize: 26,display:'inline-block'}} onClick={()=>{
-                            window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
-                        }}>
-                                <span>{item.createTime}{status[item.status]?(' | '+status[item.status]):''}</span><br/>
-                                <span>序列号:{item.serialNo}</span>
+                            }}>支付</div>
+                            <div className={style.info} onClick={() => {
+                                window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                            }}>
+                                <div className={style.serialNo}>手机号  {item.mobile}</div>
+                                <div className={style.createTime}>{item.createTime}</div>
                             </div>
-                        </List.Item>
-                      }):<div style={{textAlign:'center',padding:30}}>
-                          <div><Icon type="cross-circle" size="large" /></div>
-                            <div>暂无数据</div>
-                          </div>
-                  }
-            </List>
+                            <div className={style.delOperate} onClick={() => {
+                                alert('提示', '是否确认删除该数据？', [
+                                    { text: '取消' },
+                                    {
+                                        text: '确认', onPress: () => {
+                                            var param = {
+                                                type: "1",
+                                                remove: "1",
+                                                status: "4",
+                                                serialNo: item.serialNo,
+                                                tokenUser: sessionStorage.getItem('tokenUser'),
+                                            };
+                                            infoPut(param).then(data => {
+                                                Toast.success('删除成功');
+                                                let historyList = this.state.historyList;
+                                                historyList.splice(index, 1);
+                                                this.setState({
+                                                    historyList: historyList
+                                                })
+                                            })
+                                        }
+                                    },
+                                ])
+                            }}>删除</div>
+                        </div>
+                    }) : <div style={{ textAlign: 'center', padding: '0 30px' }}>
+                            <div style={{ marginTop: '300px' }}><img src={nodata} alt="" /></div>
+                        </div>
+                }
+                {/* {
+                        this.state.historyList.length ? this.state.historyList.map((item, index) => {
+                            return <List.Item key={index}
+                                extra={<Button type="warning" size="small" style={{ verticalAlign: 'sub' }} inline >删除</Button>}
+                                multipleLine
+                            >
+                                <Button style={{ marginRight: '10px', verticalAlign: 'top', marginTop: '20px' }} onClick={() => {
+                                    window.location.href = 'recive.html'
+                                }} className={style.x_left} type="ghost" size="small" inline >去支付</Button>
+                                <div style={{ fontSize: 26, display: 'inline-block' }} >
+                                    <span>{item.createTime}{status[item.status] ? (' | ' + status[item.status]) : ''}</span><br />
+                                    <span>序列号:{item.serialNo}</span>
+                                </div>
+                            </List.Item>
+                        }) : <div style={{ textAlign: 'center', padding: 30 }}>
+                                <div><Icon type="cross-circle" size="large" /></div>
+                                <div>暂无数据</div>
+                            </div>
+                    } */}
+
             </div>
         )
     }

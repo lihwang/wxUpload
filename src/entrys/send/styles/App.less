@@ -4,9 +4,8 @@ body {
 }
 
 .container {
-    padding-top: 36px;
-
     .title {
+        padding-top: 36px;
         font-size: 36px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
@@ -132,8 +131,79 @@ body {
         font-family: PingFangSC-Semibold, PingFang SC;
         font-weight: 600;
         color: rgba(255, 255, 255, 1);
-        .canclick{
-            background: rgba(0, 224, 230, q);
+
+        &.canclick {
+            background: rgba(0, 224, 230, 1);
+        }
+    }
+
+    .inputDetail {
+        .sureInputText {
+            width: 620px;
+            height: 88px;
+            background: rgba(0, 224, 230, 1);
+            border-radius: 38px;
+            margin: 40px auto 0;
+            line-height: 88px;
+            text-align: center;
+            font-size: 32px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .imageInput {
+            .imgTitle {
+                font-size: 36px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: rgba(76, 76, 76, 1);
+                line-height: 50px;
+                padding-top: 36px;
+                padding-left: 54px;
+            }
+
+            :global {
+                .am-image-picker-list {
+                    padding: 32px 46px 0;
+                }
+                .am-flexbox{
+                    overflow: visible;
+                }
+                
+
+                .am-image-picker-list .am-image-picker-upload-btn {
+                    width: 200px;
+                    height: 200px;
+                    border-radius: 38px;
+                    border: 2px solid rgba(222, 222, 222, 1);
+                }
+            }
+        }
+
+        :global {
+            .am-list-header {
+                font-size: 36px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: rgba(68, 68, 68, 1);
+                line-height: 50px;
+                padding-left: 54px;
+            }
+
+            .am-list-body {
+                width: 658px;
+                height: 835px;
+                background: rgba(255, 255, 255, 1);
+                box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+                border-radius: 38px;
+                overflow: hidden;
+                margin: 0 auto;
+            }
+
+            .am-list .am-list-item.am-textarea-item {
+                border-bottom: none;
+            }
         }
     }
 }

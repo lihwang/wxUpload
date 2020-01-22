@@ -164,33 +164,35 @@ export default class App extends EntryBase {
         }
         let from = util.parseUrl(location.href).params.from;
         return (<div className={style.container}>
-            <div className={style.cont} hidden={this.state.isSave}>
+            <div className={style.showPage} hidden={this.state.isSave}>
                 <Tabs tabs={tabs}
                     initialPage={0}
                     animated={false}
+                    tabBarBackgroundColor={"#F9F9F9"}
+                    tabBarTextStyle={{ color: "#C7C7C7", fontWeight: '600' }}
+                    tabBarActiveTextColor="#444444"
+                    tabBarUnderlineStyle={{ 'width': '192px', 'height': ':6px', 'background': '#00E0E6', 'borderRadius': '6px', 'marginLeft': '96px' }}
                 >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#fff' }}>
-                        <List>
-                            <TextareaItem
-                                placeholder='请输入内容'
-                                rows={15}
-                                count={300}
-                                value={this.state.sendData.text || ""}
-                            />
-                        </List>
-
+                    <div className={style.inputItem}>
+                        <TextareaItem
+                            placeholder='请输入内容'
+                            rows={15}
+                            count={300}
+                            disabled
+                            value={this.state.sendData.text || ""}
+                        />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#fff' }}>
+                    <div >
                         <List>
                             <ImagePickerExample currentPic={this.state.imgSrc} />
                         </List>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', backgroundColor: '#fff' }}>
+                    <div >
                     </div>
                 </Tabs>
-                <div hidden={from == 'notSend' || (sendData.status == '3' && from != 'payList')} className={style.actionBtn}>
+                {from == 'notSend' || (sendData.status == '3' && from != 'payList') ? '' : <div className={style.actionBtn}>
                     {sendData.status == '5' ?
-                        [<Button key='0' type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={() => {
+                        [<div key='0' className={style.toPay} onClick={() => {
                             let attach = JSON.parse(sendData.attach);
                             alert('提示', `确定保存该信息${attach.extendDay}天，支付${attach.amount / 100}元`, [
                                 { text: '取消' },
@@ -220,7 +222,7 @@ export default class App extends EntryBase {
                                     }
                                 },
                             ])
-                        }}>去支付</Button>, <Button key='1' type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={() => {
+                        }}>去支付</div>, <div key='1' className={style.delOperate} onClick={() => {
                             let attach = JSON.parse(sendData.attach);
                             alert('提示', `确定取消该支付订单（${attach.extendDay}天，支付${attach.amount / 100}元）`, [
                                 { text: '取消' },
@@ -239,10 +241,10 @@ export default class App extends EntryBase {
                                     }
                                 },
                             ])
-                        }}>取消支付</Button>] :
-                        <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={() => { this.setState({ isSave: true }) }}>保存</Button>
+                        }}>取消支付</div>] :
+                        <div className={style.saveOperate} onClick={() => { this.setState({ isSave: true }) }}>保存</div>
                     }
-                    <Button type="primary" size="small" inline style={{ marginRight: '40px' }} onClick={() => {
+                    <div className={style.delOperate} hidden={sendData.status == '5'} onClick={() => {
                         alert('提示', '是否确认删除该数据？', [
                             { text: '取消' },
                             {
@@ -264,39 +266,17 @@ export default class App extends EntryBase {
                                 }
                             },
                         ])
-                    }}>删除</Button>
-                </div>
+                    }}>删除</div>
+                </div>}
             </div>
             <div className={style.savePage} hidden={!this.state.isSave}>
-                <WingBlank>
-                    <div className={style.tips}>
-                        您所需要保存的资料已确定，请设置保存时限
-                        </div>
-                    <WhiteSpace size='lg' />
-                    {/* <DatePicker
-                        minDate={new Date(Date.now() + 1000 * 24 * 3600)}
-                        value={sendDate}
-                        mode="date"
-                        maxDate={new Date(Date.now() + 365 * 1000 * 24 * 3600)}
-                        onChange={sendDate => {
-                            let { orderNo } = this.state.sendData;
-                            depositExtend({
-                                tokenUser,
-                                serialNo,
-                                orderNo: orderNo,
-                                extendDay: sendDate ? Math.ceil((new Date(sendDate) - new Date()) / (24 * 3600000)) : 0
-                            }).then(data => {
-                                this.setState({
-                                    payPrice: data.amount,
-                                    sendDate,
-                                    extendDay:sendDate ? Math.ceil((new Date(sendDate) - new Date()) / (24 * 3600000)) : 0
-                                })
-                            })
-                        }}>
-                        <List.Item arrow="horizontal">保存至</List.Item>
-                    </DatePicker> */}
+                <div className={style.tipsTitle}>
+                    您所需要保存的资料已确定
+                    <div>请设置保存时限</div>
+                </div>
+                <div className={style.dayInput}>
                     <InputItem type="number"
-                    placeholder="请输入保存天数"
+                        placeholder="请输入保存天数"
                         max={365}
                         onChange={(e) => {
                             this.setState({
@@ -318,14 +298,16 @@ export default class App extends EntryBase {
                             })
                         }}
                         value={this.state.extendDay}
-                    >保存天数：</InputItem>
-                    <WhiteSpace size='lg' />
-                    <div className={style.payTips}>
-                        您所需要保存的资料保存时长{this.state.extendDay || 0}天<br />需要支付{payPrice}元
-                        </div>
-                    <WhiteSpace size='lg' />
-                    <Button type="primary" onClick={this.payWx}>微信支付</Button>
-                </WingBlank>
+                    >保存天数</InputItem>
+                </div>
+                <div className={style.payTips}>
+                    您所需要保存的资料保存时长<span>{this.state.extendDay || 0}天</span>
+                </div>
+                <div className={style.showMoney}>
+                    <div className={style.tips}>您需要支付</div>
+                    <div className={style.money}>¥{parseFloat(payPrice).toFixed(2)}</div>
+                </div>
+                <div className={style.wxPayBtn} onClick={this.payWx}>微信支付</div>
             </div>
         </div>
         )
