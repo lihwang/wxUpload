@@ -120,7 +120,7 @@ export default class App extends EntryBase {
                                     window.location.href = "recive.html?from=payList&serialNo=" + item.serialNo
                                 }}>续保</div>
                                 <div className={style.info} onClick={() => {
-                                    window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                                    window.location.href = "recive.html?from=payList&serialNo=" + item.serialNo
                                 }}>
                                     <div className={style.serialNo}>序列号  {item.serialNo} <span>{status[item.status] ? (status[item.status]) : ''}</span></div>
                                     <div className={style.createTime}>到期时间 {JSON.parse(item.attach).expiresTime}</div>

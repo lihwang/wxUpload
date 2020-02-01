@@ -122,7 +122,7 @@ export default class ImagePickerExample extends React.Component {
           maskClosable={true}
           onClose={()=>{this.onClose('modal1')}}
         >
-          <img src={this.state.currentPic} alt=""/>
+          <img src={this.state.currentPic} style={{maxHeight:'600px',maxWidth:'600px'}} alt=""/>
         </Modal>
       </div>
     );

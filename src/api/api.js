@@ -144,7 +144,7 @@ export function depositGet(data) {
 
 
 
-//资料价格查询
+//资料价格查询 （废弃）
 export function depositExtend(data) {
   return _fetch({
     url: "/api/deposit/extend",
@@ -153,6 +153,18 @@ export function depositExtend(data) {
     headers: {}
   });
 }
+
+//资料价格查询
+export function payAmount(data) {
+  return _fetch({
+    url: "/api/pay/amount",
+    method: "GET",
+    data: data,
+    headers: {}
+  });
+}
+
+
 
 //未支付查询支付参数
 export function payGet(data) {

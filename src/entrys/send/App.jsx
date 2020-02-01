@@ -178,7 +178,7 @@ export default class App extends EntryBase {
         let { isHiddenTextArea,canClick } = this.state;
         return (<div className={style.container}>
             <div className={style.mian} hidden={(!isHiddenTextArea) || (!this.state.isHiddenPic)}>
-                <div className={style.title}>选择发送对象·微信好友</div>
+                <div className={style.title}>选择发送对象</div>
                 {
                     this.state.phoneList.map((item, index) => {
                         return <PhoneInput key={item.id} index={index} phone={item.phone} changePhone={(phone) => {

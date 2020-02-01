@@ -144,7 +144,7 @@ export default class App extends EntryBase {
                                     window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
                                 }} />
                                 <div className={style.info} onClick={() => {
-                                    window.location.href = "recive.html?from=notSend&serialNo=" + item.serialNo
+                                    window.location.href = "recive.html?from=reciveList&serialNo=" + item.serialNo
                                 }}>
                                     <div className={style.serialNo}>序列号:{item.serialNo}</div>
                                     <div className={style.time}>{item.createTime}</div>
@@ -159,6 +159,7 @@ export default class App extends EntryBase {
                                                     remove: "1",
                                                     status: "4",
                                                     serialNo: item.serialNo,
+                                                    tokenUser: sessionStorage.getItem('tokenUser'),
                                                     userId: util.getCookie("userId")
                                                 };
                                                 infoPut(param).then(data => {

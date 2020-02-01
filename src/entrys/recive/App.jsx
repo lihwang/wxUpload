@@ -7,7 +7,7 @@ import EntryBase from '../Common/EntryBase';
 import { Button, Badge, Tabs, TextareaItem, List, WhiteSpace, InputItem, DatePicker, WingBlank, Modal, Toast } from 'antd-mobile';
 import util from "commons/util";
 import ImagePickerExample from '../send/ImagePickerExample'
-import { infoGet, infoPut, info, infoDeposit, depositExtend, payGet, payUpdate } from "api/api";
+import { infoGet, infoPut, info, infoDeposit, depositExtend, payGet, payUpdate, payAmount } from "api/api";
 import { ossGet } from 'api/api_oss'
 const alert = Modal.alert;
 const isIPhone = new RegExp('\\biPhone\\b|\\biPod\\b', 'i').test(window.navigator.userAgent);
@@ -32,7 +32,7 @@ export default class App extends EntryBase {
             imgSrc: '',
             payPrice: 0,
             payParam: {},//支付参数
-            extendDay: ''
+            extendDay: '',
         }
         this.canClick = true;
     }
@@ -152,7 +152,7 @@ export default class App extends EntryBase {
 
 
     render() {
-        let { sendDate, payParam, payPrice, sendData } = this.state;
+        let { sendDate, payParam, payPrice, sendData,amount } = this.state;
         let tabs = [
             { title: <Badge>文字</Badge> },
             { title: <Badge>图片</Badge> },
@@ -171,7 +171,7 @@ export default class App extends EntryBase {
                     tabBarBackgroundColor={"#F9F9F9"}
                     tabBarTextStyle={{ color: "#C7C7C7", fontWeight: '600' }}
                     tabBarActiveTextColor="#444444"
-                    tabBarUnderlineStyle={{ 'width': '192px', 'height': ':6px', 'background': '#00E0E6', 'borderRadius': '6px', 'marginLeft': '96px' }}
+                    tabBarUnderlineStyle={{ 'width': '192px', 'height': ':6px', 'background': '#00E0E6', 'borderRadius': '6px', 'marginLeft': tabs.length==2?'96px':'272px' }}
                 >
                     <div className={style.inputItem}>
                         <TextareaItem
@@ -182,12 +182,8 @@ export default class App extends EntryBase {
                             value={this.state.sendData.text || ""}
                         />
                     </div>
-                    <div >
-                        <List>
-                            <ImagePickerExample currentPic={this.state.imgSrc} />
-                        </List>
-                    </div>
-                    <div >
+                    <div style={{marginTop:'30px',background:'#f9f9f9'}}>
+                        <ImagePickerExample currentPic={this.state.imgSrc} />
                     </div>
                 </Tabs>
                 {from == 'notSend' || (sendData.status == '3' && from != 'payList') ? '' : <div className={style.actionBtn}>
@@ -253,6 +249,7 @@ export default class App extends EntryBase {
                                         type: "1",
                                         remove: "1",
                                         status: "4",
+                                        tokenUser,
                                         serialNo,
                                     };
                                     infoPut(param).then(data => {
@@ -284,15 +281,16 @@ export default class App extends EntryBase {
                             }, () => {
                                 if (this.state.extendDay) {
                                     let { orderNo, extendDay } = this.state.sendData;
-                                    depositExtend({
+                                    payAmount({
                                         tokenUser,
-                                        serialNo,
-                                        orderNo: orderNo,
-                                        extendDay: this.state.extendDay
+                                        type: '2',
+                                        day: this.state.extendDay,
+                                        serialNo
                                     }).then(data => {
                                         this.setState({
                                             payPrice: data.amount,
                                         })
+
                                     })
                                 }
                             })
@@ -305,7 +303,7 @@ export default class App extends EntryBase {
                 </div>
                 <div className={style.showMoney}>
                     <div className={style.tips}>您需要支付</div>
-                    <div className={style.money}>¥{parseFloat(payPrice).toFixed(2)}</div>
+                    <div className={style.money}>¥{parseFloat(payPrice/100).toFixed(2)}</div>
                 </div>
                 <div className={style.wxPayBtn} onClick={this.payWx}>微信支付</div>
             </div>
