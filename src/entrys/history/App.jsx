@@ -98,13 +98,15 @@ export default class App extends EntryBase {
             offset: this.state.offset,
             tokenUser: sessionStorage.getItem('tokenUser'),
         }
-        infoList(param).then(data => {
-            this.setState({
-                historyList: [...this.state.historyList, ...data.records],
-            }, () => {
-                this.httpCallBack(data.records)
+        if (param.tokenUser) {
+            infoList(param).then(data => {
+                this.setState({
+                    historyList: [...this.state.historyList, ...data.records],
+                }, () => {
+                    this.httpCallBack(data.records)
+                })
             })
-        })
+        }
     }
 
     onBridgeReady = () => {
@@ -168,7 +170,7 @@ export default class App extends EntryBase {
                                 <div className={style.serialNo}>手机号  {item.mobile}</div>
                                 <div className={style.createTime}>{item.createTime}</div>
                             </div>
-                            <div className={style.delOperate} onClick={() => {
+                            {/* <div className={style.delOperate} onClick={() => {
                                 alert('提示', '是否确认删除该数据？', [
                                     { text: '取消' },
                                     {
@@ -191,7 +193,7 @@ export default class App extends EntryBase {
                                         }
                                     },
                                 ])
-                            }}>删除</div>
+                            }}>删除</div> */}
                         </div>
                     }) : <div style={{ textAlign: 'center', padding: '0 30px' }}>
                             <div style={{ marginTop: '300px' }}><img src={nodata} alt="" /></div>

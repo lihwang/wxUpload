@@ -16,6 +16,7 @@ import {
 import classnames from 'classnames';
 const AgreeItem = Checkbox.AgreeItem;
 import ImagePickerExample from './ImagePickerExample'
+import VideoPickerExample from './VideoPickerExample'
 import util from "commons/util";
 
 import { info } from "api/api";
@@ -31,6 +32,7 @@ export default class App extends EntryBase {
             areaValue: '',  //文本域值
             isHiddenTextArea: true, //文本域隐藏
             isHiddenPic: true, //照片显示隐藏
+            isHiddenVideo: true,
             modal1: false,    //弹窗
             ossId: '',
             picId: "",
@@ -40,7 +42,8 @@ export default class App extends EntryBase {
             hasQuestion: false,
             question: '',
             answer: '',
-            canClick:false
+            canClick: false,
+
         }
         this.canClick = true;
     }
@@ -84,32 +87,37 @@ export default class App extends EntryBase {
         })
     }
 
+    getVideoId = (vedioId) => {
+        this.setState({
+            vedioId: vedioId
+        })
+    }
+
     addPhone = () => {
         this.setState({
             phoneList: [...this.state.phoneList, { phone: '', id: 'id' + new Date().getTime() }]
-        },this.judgeCanClick)
+        }, this.judgeCanClick)
     }
 
-    judgeCanClick=()=>{
+    judgeCanClick = () => {
         let { phoneList, areaValue, firstpw, secondpw, sendDate, hasError, hasQuestion, question, answer } = this.state;
-        let canClick=true;
+        let canClick = true;
         for (let i = 0; i < phoneList.length; i++) {
             if (!phoneList[i].phone) {
-                canClick=false;
+                canClick = false;
             }
         }
 
-        if (!areaValue) canClick=false;
-        if (!firstpw) canClick=false;
-        if (!secondpw) canClick=false;
-        if (!sendDate) canClick=false;
-        console.log(canClick)
+        if (!areaValue && !this.state.picId && !this.state.vedioId) canClick = false;
+        if (!firstpw) canClick = false;
+        if (!secondpw) canClick = false;
+        if (!sendDate) canClick = false;
         this.setState({
             canClick
         })
     }
 
-    
+
 
 
     sendInfo = () => {
@@ -123,16 +131,13 @@ export default class App extends EntryBase {
                 return Toast.fail(`第${i + 1}个手机号为空`);
             }
         }
-        if (!areaValue) return Toast.fail("存储文字必填！");
+        if (!areaValue && !this.state.picId && !this.state.vedioId) return Toast.fail("存储信息必填！");
         if (!firstpw) return Toast.fail("取消密码必填！");
         if (!secondpw) return Toast.fail("确认取消密码必填！");
         if (!sendDate) return Toast.fail("发送时间必填！");
         if (hasError) return Toast.fail("手机号格式错误");
 
         if (secondpw != firstpw) return Toast.fail("两次密码输入不一致！");
-        // if (hasQuestion && (!answer||!question)) {
-        //     return Toast.fail("自定义问题和答案必填！");
-        // }
         var param = {
             mobile: phoneList.map(item => item.phone.replace(/\s/g, '')).join(','),
             password: secondpw,
@@ -175,9 +180,9 @@ export default class App extends EntryBase {
     }
 
     render() {
-        let { isHiddenTextArea,canClick } = this.state;
+        let { isHiddenTextArea, canClick, isHiddenVideo, isHiddenPic } = this.state;
         return (<div className={style.container}>
-            <div className={style.mian} hidden={(!isHiddenTextArea) || (!this.state.isHiddenPic)}>
+            <div className={style.mian} hidden={(!isHiddenTextArea) || (!isHiddenPic) || (!isHiddenVideo)}>
                 <div className={style.title}>选择发送对象</div>
                 {
                     this.state.phoneList.map((item, index) => {
@@ -186,7 +191,7 @@ export default class App extends EntryBase {
                             newList[index].phone = phone;
                             this.setState({
                                 phoneList: newList
-                            },this.judgeCanClick)
+                            }, this.judgeCanClick)
                         }} delIndex={() => {
                             let newList = this.state.phoneList;
                             newList.splice(index, 1);
@@ -206,22 +211,26 @@ export default class App extends EntryBase {
                     <div className={style.inputFont} onClick={() => {
                         this.setState({
                             isHiddenPic: false
-                        },this.judgeCanClick)
+                        }, this.judgeCanClick)
                     }}>导入照片</div>
-                    <div className={style.inputVideo}>导入视频</div>
+                    <div className={style.inputFont} onClick={() => {
+                        this.setState({
+                            isHiddenVideo: false
+                        }, this.judgeCanClick)
+                    }}>导入视频</div>
                 </div>
                 <div className={style.selectTime}>
                     <DatePicker
                         minDate={new Date()}
                         minuteStep={5}
                         value={this.state.sendDate}
-                        onChange={sendDate => this.setState({ sendDate },this.judgeCanClick)}>
+                        onChange={sendDate => this.setState({ sendDate }, this.judgeCanClick)}>
                         <List.Item arrow="horizontal">设定发送时间</List.Item>
                     </DatePicker>
                 </div>
                 <div className={style.inputPw}>
-                    <InputItem maxLength='6' value={this.state.firstpw} onChange={firstpw => this.setState({ firstpw },this.judgeCanClick)} type="password" placeholder="****">设置取消密码</InputItem>
-                    <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({ secondpw },this.judgeCanClick)} type="password" placeholder="****">再次确认密码</InputItem>
+                    <InputItem maxLength='6' value={this.state.firstpw} onChange={firstpw => this.setState({ firstpw }, this.judgeCanClick)} type="password" placeholder="****">设置取消密码</InputItem>
+                    <InputItem maxLength='6' value={this.state.secondpw} onChange={secondpw => this.setState({ secondpw }, this.judgeCanClick)} type="password" placeholder="****">再次确认密码</InputItem>
                 </div>
                 <div className={style.passWordTips}>发送时间到达前，可凭此密码取消发送，密码输入错误，会导致系统立刻发送！<span>只有一次机会！！不可逆！！</span></div>
                 <div className={classnames(style.sendInfo, { [style.canclick]: canClick })} onClick={this.sendInfo}>所有资料准备完毕，确认上传</div>
@@ -244,16 +253,26 @@ export default class App extends EntryBase {
                     <div className={style.sureInputText} onClick={() => {
                         this.setState({
                             isHiddenTextArea: true
-                        },this.judgeCanClick)
+                        }, this.judgeCanClick)
                     }}>输入完毕</div>
                 </div>
-                <div className={style.imageInput} hidden={this.state.isHiddenPic}>
+                <div className={style.imageInput} hidden={isHiddenPic}>
                     <div className={style.imgTitle}>请选择上传照片</div>
-                    <ImagePickerExample userId={this.userId} getPicId={this.getPicId} />
+                    <ImagePickerExample getPicId={this.getPicId} allowUpload={true} />
                     <WhiteSpace size='lg' />
                     <div className={style.sureInputText} onClick={() => {
                         this.setState({
                             isHiddenPic: true
+                        })
+                    }}>导入完毕</div>
+                </div>
+                <div className={style.imageInput} hidden={isHiddenVideo}>
+                    <div className={style.imgTitle}>请选择上传视频</div>
+                    <VideoPickerExample getVideoId={this.getVideoId} allowUpload={false} />
+                    <WhiteSpace size='lg' />
+                    <div className={style.sureInputText} onClick={() => {
+                        this.setState({
+                            isHiddenVideo: true
                         })
                     }}>导入完毕</div>
                 </div>

@@ -112,30 +112,6 @@ export default class App extends EntryBase {
                 {
                     this.state.historyList.length ? this.state.historyList.map((item, index) => {
                         return <div className={style.historyItem} key={item.serialNo}>
-                            {/* <div className={style.delOperate} onClick={() => {
-                                alert('提示', '删除是删除列表，不是取消发送。删除以后，不能再进行取消发送操作，是否继续？', [
-                                    { text: '取消' },
-                                    {
-                                        text: '确认', onPress: () => {
-                                            var param = {
-                                                type: "1",
-                                                // remove: "1",
-                                                status: "4",
-                                                serialNo: item.serialNo,
-                                                tokenUser: sessionStorage.getItem('tokenUser'),
-                                            };
-                                            infoPut(param).then(data => {
-                                                Toast.success('删除成功');
-                                                let historyList = this.state.historyList;
-                                                historyList.splice(index, 1);
-                                                this.setState({
-                                                    historyList: historyList
-                                                })
-                                            })
-                                        }
-                                    },
-                                ])
-                            }}>删除</div> */}
                             <div className={style.info}>
                                 <div className={style.serialNo}>序列号  {item.serialNo}</div>
                                 <div className={style.createTime}>{item.createTime}</div>

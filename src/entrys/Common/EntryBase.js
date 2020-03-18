@@ -24,7 +24,7 @@ class EntryBase extends React.Component {
 		// login()
 	}
 
-	componentDidMount(){
+	 componentDidMount(){
 		
 		let dataList={
             caller:'apiUser@wxapp.linkmsg.net',

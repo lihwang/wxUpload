@@ -9,7 +9,7 @@ import { Toast } from 'antd-mobile';
 
 import util from "commons/util";
 //api
-import {infoList} from "api/api";
+import { infoList } from "api/api";
 let openid = util.parseUrl(location.href).params.openid || '';
 //image
 import titleIcon from 'images/title_icon.png'
@@ -17,32 +17,37 @@ export default class App extends EntryBase {
     constructor(props) {
         super(props);
         this.state = {
-            hasUnfinished:false
+            hasUnfinished: false
         };
     }
 
 
     componentDidMount() {
         super.componentDidMount();
-        let param={
-            type: "1",
-            status:0,
-            size: 10,
-            offset: 0,
-            tokenUser: sessionStorage.getItem('tokenUser'),
-        }
-        infoList(param).then(data=>{
-          if(data.records&&data.records.length){
-              this.setState({
-                  hasUnfinished:true
-              })
-          }
-          
-        })
+        setTimeout(() => {
+            let param = {
+                type: "1",
+                status: 0,
+                size: 10,
+                offset: 0,
+                tokenUser: sessionStorage.getItem('tokenUser'),
+            }
+            if (param.tokenUser) {
+                infoList(param).then(data => {
+                    if (data.records && data.records.length) {
+                        this.setState({
+                            hasUnfinished: true
+                        })
+                    }
+
+                })
+            }
+
+        }, 1000)
     }
 
     render() {
-        let {hasUnfinished}=this.state;
+        let { hasUnfinished } = this.state;
         return (
             <div className={style.container}>
                 <h2 className={style.title}>天易智联<img src={titleIcon} />时光胶囊</h2>
@@ -56,7 +61,7 @@ export default class App extends EntryBase {
                     <div className={style.unfinished} onClick={() => {
                         window.location.href = './history.html';
                     }}>未完成发送操作（仅保留两小时）
-                    {hasUnfinished&&<div className={style.dotTips}></div>}
+                    {hasUnfinished && <div className={style.dotTips}></div>}
                     </div>
                     <div className={style.saveInfo} onClick={() => {
                         window.location.href = './payList.html';

@@ -7,6 +7,7 @@ import EntryBase from '../Common/EntryBase';
 import { Button, Badge, Tabs, TextareaItem, List, WhiteSpace, InputItem, DatePicker, WingBlank, Modal, Toast } from 'antd-mobile';
 import util from "commons/util";
 import ImagePickerExample from '../send/ImagePickerExample'
+import VideoPickerExample from '../send/VideoPickerExample'
 import { infoGet, infoPut, info, infoDeposit, depositExtend, payGet, payUpdate, payAmount } from "api/api";
 import { ossGet } from 'api/api_oss'
 const alert = Modal.alert;
@@ -25,14 +26,16 @@ let tokenUser = sessionStorage.getItem('tokenUser') || '';
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
+        console.log(props)
         this.state = {
             isSave: false,
             sendDate: '',
             sendData: {},//发送数据
-            imgSrc: '',
+            imgList: [],
             payPrice: 0,
             payParam: {},//支付参数
             extendDay: '',
+            vedioList: []
         }
         this.canClick = true;
     }
@@ -51,22 +54,38 @@ export default class App extends EntryBase {
             type: from == 'reciveList' || from == 'payList' ? "2" : '1'
         };
         infoGet(param).then(data => {
-            var ossParam = {
-                tokenUser,
-                ossId: data.picId
-            };
             this.setState({
                 sendData: data,
             })
             if (data.picId) {
-                ossGet(ossParam).then(res => {
+                ossGet({
+                    tokenUser,
+                    ossId: data.picId
+                }).then(res => {
                     this.setState({
-                        imgSrc: "http://msg-upyun.linkmsg.net" + res.path
+                        // imgSrc: "http://msg-upyun.linkmsg.net" + res.path
+                        imgList: res.data
                     })
                 }, (error) => {
                     if (error.code == 10010) {
                         this.setState({
-                            imgSrc: ''
+                            imgList: []
+                        })
+                    }
+                })
+            }
+            if (data.vedioId) {
+                ossGet({
+                    tokenUser,
+                    ossId: data.vedioId
+                }).then(res => {
+                    this.setState({
+                        vedioList: res.data
+                    })
+                }, (error) => {
+                    if (error.code == 10010) {
+                        this.setState({
+                            vedioList: []
                         })
                     }
                 })
@@ -152,39 +171,54 @@ export default class App extends EntryBase {
 
 
     render() {
-        let { sendDate, payParam, payPrice, sendData,amount } = this.state;
-        let tabs = [
-            { title: <Badge>文字</Badge> },
-            { title: <Badge>图片</Badge> },
-        ];
-        if (!this.state.imgSrc) {
-            tabs = [
-                { title: <Badge>文字</Badge> },
-            ];
+        let { sendDate, payParam, payPrice, sendData, amount, imgList, vedioList, isSave } = this.state;
+
+
+        let tabs = [], tabsContent = [];
+        if (sendData.text) {
+            tabs.push({ title: <Badge>文字</Badge> })
+            tabsContent.push(<div className={style.inputItem}>
+                <TextareaItem
+                    placeholder='请输入内容'
+                    rows={15}
+                    count={300}
+                    disabled
+                    value={sendData.text || ""}
+                />
+            </div>)
         }
+        if (imgList.length) {
+            tabs.push({ title: <Badge>图片</Badge> })
+            tabsContent.push(<div style={{ marginTop: '30px', background: '#f9f9f9' }}>
+                <ImagePickerExample imgList={imgList} />
+            </div>)
+        }
+        if (vedioList.length) {
+            tabs.push({ title: <Badge>视频</Badge> })
+            tabsContent.push(<div style={{ marginTop: '30px', background: '#f9f9f9' }}>
+                <VideoPickerExample imgList={vedioList} />
+            </div>)
+        }
+        let lenghControl = {
+            '1': '272px',
+            '2': '72px',
+            '3': '24px'
+        }
+
         let from = util.parseUrl(location.href).params.from;
         return (<div className={style.container}>
-            <div className={style.showPage} hidden={this.state.isSave}>
+            <div className={style.showPage} hidden={isSave}>
                 <Tabs tabs={tabs}
                     initialPage={0}
                     animated={false}
                     tabBarBackgroundColor={"#F9F9F9"}
                     tabBarTextStyle={{ color: "#C7C7C7", fontWeight: '600' }}
                     tabBarActiveTextColor="#444444"
-                    tabBarUnderlineStyle={{ 'width': '192px', 'height': ':6px', 'background': '#00E0E6', 'borderRadius': '6px', 'marginLeft': tabs.length==2?'96px':'272px' }}
+                    tabBarUnderlineStyle={{ 'width': '192px', 'height': ':6px', 'background': '#00E0E6', 'borderRadius': '6px', 'marginLeft': lenghControl[tabs.length] }}
                 >
-                    <div className={style.inputItem}>
-                        <TextareaItem
-                            placeholder='请输入内容'
-                            rows={15}
-                            count={300}
-                            disabled
-                            value={this.state.sendData.text || ""}
-                        />
-                    </div>
-                    <div style={{marginTop:'30px',background:'#f9f9f9'}}>
-                        <ImagePickerExample currentPic={this.state.imgSrc} />
-                    </div>
+                    {
+                        tabsContent
+                    }
                 </Tabs>
                 {from == 'notSend' || (sendData.status == '3' && from != 'payList') ? '' : <div className={style.actionBtn}>
                     {sendData.status == '5' ?
@@ -303,7 +337,7 @@ export default class App extends EntryBase {
                 </div>
                 <div className={style.showMoney}>
                     <div className={style.tips}>您需要支付</div>
-                    <div className={style.money}>¥{parseFloat(payPrice/100).toFixed(2)}</div>
+                    <div className={style.money}>¥{parseFloat(payPrice / 100).toFixed(2)}</div>
                 </div>
                 <div className={style.wxPayBtn} onClick={this.payWx}>微信支付</div>
             </div>
