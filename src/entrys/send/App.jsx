@@ -20,6 +20,7 @@ import VideoPickerExample from './VideoPickerExample'
 import util from "commons/util";
 
 import { info } from "api/api";
+
 export default class App extends EntryBase {
     constructor(props) {
         super(props);
@@ -46,6 +47,7 @@ export default class App extends EntryBase {
 
         }
         this.canClick = true;
+        this.nowTime = new Date();
     }
 
     componentDidMount() {
@@ -113,7 +115,8 @@ export default class App extends EntryBase {
         if (!secondpw) canClick = false;
         if (!sendDate) canClick = false;
         this.setState({
-            canClick
+            canClick,
+            sendDate:+sendDate-new Date()<300000?new Date(+new Date() + 5 * 60000):sendDate
         })
     }
 
@@ -146,7 +149,7 @@ export default class App extends EntryBase {
             tokenUser: sessionStorage.getItem('tokenUser'),
             picId: this.state.picId,
             vedioId: this.state.vedioId,
-            planTime: util.msecToString(new Date(this.state.sendDate).getTime(), "yyyyMMddHHmmss"),
+            planTime: util.msecToString(new Date(+sendDate - this.nowTime > 300000 ? sendDate : new Date(+new Date() + 300000)).getTime(), "yyyyMMddHHmmss"),
             passwdAsk: question,
             passwdReply: answer
         };
@@ -221,8 +224,8 @@ export default class App extends EntryBase {
                 </div>
                 <div className={style.selectTime}>
                     <DatePicker
-                        minDate={new Date()}
-                        minuteStep={5}
+                        minDate={new Date(+new Date()+300000)}
+                        minuteStep={1}
                         value={this.state.sendDate}
                         onChange={sendDate => this.setState({ sendDate }, this.judgeCanClick)}>
                         <List.Item arrow="horizontal">设定发送时间</List.Item>
