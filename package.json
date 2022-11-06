@@ -64,7 +64,7 @@
     "del": "^2.2.2",
     "file-loader": "^1.1.11",
     "glob": "^7.1.1",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-sftp": "^0.1.5",
     "gulp-util": "^3.0.8",
     "html-loader": "^0.4.4",
